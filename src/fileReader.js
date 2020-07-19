@@ -13,11 +13,10 @@ const readInputFile = (file_name) => {
         };
     }
 
-    validateFile(data, file_name);
     return data;
 };
 
-const validateFile = (data, file_name) => {
+const validateFileData = (data, file_name) => {
     if (!Array.isArray(data)) {
         throw {
             err: ERRORS.INVALID_INPUT_FILE_FORMAT,
@@ -75,8 +74,11 @@ const validateFile = (data, file_name) => {
             }
         });
     });
+
+    return true;
 };
 
 module.exports = {
     readInputFile,
+    validateFileData,
 };

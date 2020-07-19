@@ -4,7 +4,6 @@ const printError = (err, msg) => {
     if (msg) {
         console.error(`Message: ${msg}`);
     }
-    process.exit(err.code);
 };
 
 const printUsage = () => {

@@ -1,13 +1,14 @@
 const match = (candidates, interviewers) => {
-    const matrix = buildMatrix(candidates.length, interviewers.length);
-
+    const matrix = buildMatchesMatrix(candidates, interviewers);
+    console.log(matrix);
     return "TO DO";
 };
 
-const buildMatrix = (M, N) => (
-    Array(M).fill().map(() => Array(N).fill(0))
-);
+const buildMatchesMatrix = (M, N) => {
+    Array(M).fill().map(() => Array(N).fill(0));
+};
 
 module.exports = {
     match,
+    buildMatchesMatrix,
 };

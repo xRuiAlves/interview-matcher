@@ -1,5 +1,5 @@
 const { printUsage, printError } = require("./utils");
-const { readInputFile } = require("./fileReader");
+const { readInputFile, validateFileData } = require("./fileReader");
 const { match } = require("./matcher");
 const ERRORS = require("./errors");
 
@@ -13,6 +13,9 @@ const main = () => {
 
     const candidates = readInputFile(process.argv[2]);
     const interviewers = readInputFile(process.argv[3]);
+
+    validateFileData(candidates);
+    validateFileData(interviewers);
 
     return match(candidates, interviewers);
 };
