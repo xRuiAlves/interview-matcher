@@ -1,0 +1,29 @@
+[
+    {
+        "slot": "slot 1",
+        "interviewers": [
+            "interviewer 1",
+            "interviewer 2",
+            "interviewer N"
+        ],
+        "candidate": "candidate 1"
+    },
+    {
+        "slot": "slot 2",
+        "interviewers": [
+            "interviewer 1",
+            "interviewer 2",
+            "interviewer N"
+        ],
+        "candidate": "candidate 2"
+    },
+    {
+        "slot": "slot N",
+        "interviewers": [
+            "interviewer 1",
+            "interviewer 2",
+            "interviewer N"
+        ],
+        "candidate": "candidate N"
+    }
+]
