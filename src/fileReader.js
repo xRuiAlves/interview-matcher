@@ -3,15 +3,14 @@ const { printError } = require("./utils");
 const ERRORS = require("./errors");
 
 const readInputFile = (file_name) => {
-    let data;
     try {
         const data = JSON.parse(fs.readFileSync(file_name));
         validateFile(data, file_name);
         return data;
-    } catch {
+    } catch (_e) {
         printError(ERRORS.INVALID_INPUT_FILE, `The file ${file_name} is not a valid JSON file.`);
     }
-}
+};
 
 const validateFile = (data, file_name) => {
     if (!Array.isArray(data)) {
@@ -45,10 +44,10 @@ const validateFile = (data, file_name) => {
             if (typeof slot !== "string") {
                 printError(ERRORS.INVALID_INPUT_FILE, `In file ${file_name}, in subject num. ${index + 1}, slot num. ${index + 1} is not a String.`);
             }
-        })
-    })
-}
+        });
+    });
+};
 
 module.exports = {
     readInputFile,
-}
+};
