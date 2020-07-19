@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Candidate A",
+        "slots": [
+            "slot 1",
+            "slot 2"
+        ]
+    },
+    {
+        "name": "Candidate B",
+        "slots": [
+            "slot 3"
+        ]
+    },
+    {
+        "name": "Candidate C",
+        "slots": [
+            "slot 2",
+            "slot 4",
+            "slot 5"
+        ]
+    },
+    {
+        "name": "Candidate D",
+        "slots": [
+            "slot 1",
+            "slot 5"
+        ]
+    }
+]

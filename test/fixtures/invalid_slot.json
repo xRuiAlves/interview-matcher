@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Name 1",
+        "slots": [
+            "slot 1",
+            "slot 2",
+            "slot N"
+        ]
+    },
+    {
+        "name": "Name 2",
+        "slots": [
+            "slot 1",
+            "slot 2",
+            "slot N"
+        ]
+    },
+    {
+        "name": "Name N",
+        "slots": [
+            ["Not a String"],
+            "slot 1",
+            "slot 2",
+            "slot N"
+        ]
+    }
+]

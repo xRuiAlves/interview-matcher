@@ -1,0 +1,25 @@
+[
+    {
+        "name": "Name 1",
+        "slots": [
+            "slot 1",
+            "slot 2",
+            "slot N"
+        ]
+    },
+    {
+        "slots": [
+            "slot 1",
+            "slot 2",
+            "slot N"
+        ]
+    },
+    {
+        "name": "Name N",
+        "slots": [
+            "slot 1",
+            "slot 2",
+            "slot N"
+        ]
+    }
+]
