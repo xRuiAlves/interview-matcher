@@ -1,10 +1,10 @@
 [
     {
-        "name": "Name 1",
+        "id": "Name 1",
         "slots": []
     },
     {
-        "name": "Name 2",
+        "id": "Name 2",
         "slots": [
             "slot 1",
             "slot 2",
@@ -12,7 +12,7 @@
         ]
     },
     {
-        "name": "Name N",
+        "id": "Name N",
         "slots": [
             "slot 1",
             "slot 2",

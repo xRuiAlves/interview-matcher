@@ -24,19 +24,19 @@ const validateFileData = (data, file_name) => {
         };
     }
 
-    const names = new Set();
+    const ids = new Set();
 
     data.forEach((option, index) => {
-        if (!option.name) {
+        if (!option.id) {
             throw {
-                err: ERRORS.MISSING_INPUT_NAME,
-                msg: `In file ${file_name}, subject num. ${index + 1} does not feature a required 'name' attribute.`,
+                err: ERRORS.MISSING_INPUT_ID,
+                msg: `In file ${file_name}, subject num. ${index + 1} does not feature a required 'id' attribute.`,
             };
         }
-        if (typeof option.name !== "string") {
+        if (typeof option.id !== "string") {
             throw {
-                err: ERRORS.INVALID_INPUT_NAME,
-                msg: `In file ${file_name}, subject num. ${index + 1} 'name' is not a String.`,
+                err: ERRORS.INVALID_INPUT_ID,
+                msg: `In file ${file_name}, subject num. ${index + 1} 'id' is not a String.`,
             };
         }
         if (!option.slots) {
@@ -57,13 +57,13 @@ const validateFileData = (data, file_name) => {
                 msg: `In file ${file_name}, subject num. ${index + 1} 'slots' Array is empty.`,
             };
         }
-        if (names.has(option.name)) {
+        if (ids.has(option.id)) {
             throw {
-                err: ERRORS.DUPLICATE_INPUT_NAME,
-                msg: `In file ${file_name}, subject ${option.name} is declared twice.`,
+                err: ERRORS.DUPLICATE_INPUT_ID,
+                msg: `In file ${file_name}, subject ${option.id} is declared twice.`,
             };
         }
-        names.add(option.name);
+        ids.add(option.id);
 
         option.slots.forEach((slot, index) => {
             if (typeof slot !== "string") {

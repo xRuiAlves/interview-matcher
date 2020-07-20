@@ -33,9 +33,9 @@ describe("Detect invalid file format and/or structure", () => {
         }
     });
 
-    it("should fail if any subject's name is missing", () => {
+    it("should fail if any subject's id is missing", () => {
         try {
-            const data = readInputFile(`${__dirname}/fixtures/missing_name.json`);
+            const data = readInputFile(`${__dirname}/fixtures/missing_id.json`);
             validateFileData(data);
             fail("Should have thrown exception");
         } catch ({ err }) {
@@ -43,9 +43,9 @@ describe("Detect invalid file format and/or structure", () => {
         }
     });
 
-    it("should fail if any subject's name is not a String", () => {
+    it("should fail if any subject's id is not a String", () => {
         try {
-            const data = readInputFile(`${__dirname}/fixtures/invalid_name.json`);
+            const data = readInputFile(`${__dirname}/fixtures/invalid_id.json`);
             validateFileData(data);
             fail("Should have thrown exception");
         } catch ({ err }) {
@@ -85,7 +85,7 @@ describe("Detect invalid file format and/or structure", () => {
 
     it("should fail if any subject appear more than once", () => {
         try {
-            const data = readInputFile(`${__dirname}/fixtures/duplicate_name.json`);
+            const data = readInputFile(`${__dirname}/fixtures/duplicate_id.json`);
             validateFileData(data);
             fail("Should have thrown exception");
         } catch ({ err }) {

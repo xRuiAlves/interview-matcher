@@ -11,11 +11,11 @@ const ERRORS = Object.freeze({
         code: 3,
         description: "Invalid input file format",
     },
-    MISSING_INPUT_NAME: {
+    MISSING_INPUT_ID: {
         code: 4,
         description: "Failed file parsing",
     },
-    INVALID_INPUT_NAME: {
+    INVALID_INPUT_ID: {
         code: 5,
         description: "Failed file parsing",
     },
@@ -31,7 +31,7 @@ const ERRORS = Object.freeze({
         code: 8,
         description: "Failed file parsing",
     },
-    DUPLICATE_INPUT_NAME: {
+    DUPLICATE_INPUT_ID: {
         code: 9,
         description: "Failed file parsing",
     },

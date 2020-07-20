@@ -17,7 +17,12 @@ const main = () => {
     validateFileData(candidates);
     validateFileData(interviewers);
 
-    return match(candidates, interviewers);
+    const config = {
+        interviewers_per_slot: 3,
+        max_interviews_per_interviewer: 5,
+    };
+
+    return match(candidates, interviewers, config);
 };
 
 try {

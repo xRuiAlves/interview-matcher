@@ -9,22 +9,14 @@
     {
         "id": "Candidate B",
         "slots": [
-            "slot 4"
+            "slot 2"
         ]
     },
     {
         "id": "Candidate C",
         "slots": [
             "slot 2",
-            "slot 4",
-            "slot 5"
-        ]
-    },
-    {
-        "id": "Candidate D",
-        "slots": [
-            "slot 1",
-            "slot 5"
+            "slot 3"
         ]
     }
 ]
