@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node src/main.js",
-    "test": "jest --coverage",
-    "test-mutation": "stryker run",
+    "test": "jest --coverage && coveralls < coverage/lcov.info",
+    "test:mutation": "stryker run",
     "lint": "./node_modules/.bin/eslint test/**/*.js src/**/*.js"
   },
   "keywords": [
@@ -23,6 +23,7 @@
     "@stryker-mutator/core": "^3.3.1",
     "@stryker-mutator/javascript-mutator": "^3.3.1",
     "@stryker-mutator/jest-runner": "^3.3.1",
+    "coveralls": "^3.1.0",
     "eslint": "^7.5.0",
     "jest": "^26.1.0"
   }

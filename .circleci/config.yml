@@ -39,7 +39,7 @@ jobs:
           command: npm test
       - run:
           name: Mutation tests
-          command: npm run test-mutation
+          command: npm run test:mutation
   audit:
     docker: *docker
     steps:
