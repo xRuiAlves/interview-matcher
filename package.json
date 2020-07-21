@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node src/main.js",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "./node_modules/.bin/eslint test/**/*.js src/**/*.js"
   },
   "keywords": [
