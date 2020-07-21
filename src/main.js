@@ -1,4 +1,4 @@
-const { printUsage, printError } = require("./utils");
+const { printUsage, printError } = require("./printer");
 const { readInputFile, validateFileData } = require("./fileReader");
 const { match } = require("./matcher");
 const ERRORS = require("./errors");

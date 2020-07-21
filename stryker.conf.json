@@ -17,6 +17,7 @@
   "testRunner": "jest",
   "mutate": [
     "src/**/*.js",
+    "!src/printer.js",
     "!src/main.js"
   ],
   "transpilers": [],
