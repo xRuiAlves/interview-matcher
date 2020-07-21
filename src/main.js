@@ -18,7 +18,7 @@ const main = () => {
     validateFileData(interviewers);
 
     const config = {
-        interviewers_per_slot: 3,
+        interviewers_per_slot: 2,
         max_interviews_per_interviewer: 5,
     };
 
