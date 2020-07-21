@@ -35,8 +35,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Run tests
+          name: Unit tests
           command: npm test
+      - run:
+          name: Mutation tests
+          command: npm run test-mutation
   audit:
     docker: *docker
     steps:

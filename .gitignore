@@ -163,3 +163,9 @@ temp/
 # Directories potentially created on remote AFP share
 
 # End of https://www.gitignore.io/api/osx,node,linux,macos
+
+# Stryker files
+.stryker-tmp
+
+# Reports
+reports/

@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutator": "javascript",
+  "packageManager": "npm",
+  "reporters": [
+    "clear-text",
+    "progress",
+    "dashboard"
+  ],
+  "dashboard": {
+    "baseUrl": "https://dashboard.stryker-mutator.io/api/reports",
+    "reportType": "mutationScore",
+    "project": "github.com/xRuiAlves/interview-matcher",
+    "version": "master",
+    "reportType": "full"
+  },
+  "testRunner": "jest",
+  "mutate": [
+    "src/**/*.js",
+    "!src/main.js"
+  ],
+  "transpilers": [],
+  "coverageAnalysis": "off"
+}
