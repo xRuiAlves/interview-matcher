@@ -1,0 +1,10 @@
+[
+    {
+        "slot": "slot 1",
+        "interviewers": [
+            "Inteviewer B",
+            "Inteviewer C"
+        ],
+        "candidate": "Candidate D"
+    }
+]

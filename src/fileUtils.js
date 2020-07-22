@@ -78,7 +78,13 @@ const validateFileData = (data, file_name) => {
     return true;
 };
 
+const writeJSONtoFile = (data, file_name) => {
+    const data_json = JSON.stringify(data, null, 4);
+    fs.writeFileSync(file_name, data_json);
+};
+
 module.exports = {
     readInputFile,
     validateFileData,
+    writeJSONtoFile,
 };

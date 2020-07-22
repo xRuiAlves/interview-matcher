@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-const { readInputFile, validateFileData } = require("../src/fileReader");
+const { readInputFile, validateFileData, writeJSONtoFile } = require("../src/fileUtils");
+const fs = require("fs");
 
 describe("Correct file reading and validating", () => {
     it("should read a well-formed valid file", () => {
@@ -120,5 +121,26 @@ describe("Detect invalid file format and/or structure", () => {
             expect(e.err.code).toBe(10);
             expect(e.msg.includes("in subject num. 1, slot num. 1 is not a String")).toBe(true);
         }
+    });
+});
+
+describe("Correct file JSON writing", () => {
+    it("should write json output to file", () => {
+        const file_name = `${__dirname}/test.json`;
+        const data = { test: "test" };
+
+        if (fs.existsSync(file_name)) {
+            fs.unlinkSync(file_name);
+        }
+
+        writeJSONtoFile(data, file_name);
+        expect(fs.existsSync(file_name)).toBe(true);
+        fs.unlinkSync(file_name);
+    });
+
+    it("should validate a valid file", () => {
+        const file_name = `${__dirname}/fixtures/valid_candidates.json`;
+        const data = readInputFile(file_name);
+        expect(validateFileData(data)).toBe(true, file_name);
     });
 });
