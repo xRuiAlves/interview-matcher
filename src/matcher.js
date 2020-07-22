@@ -1,9 +1,13 @@
+const FordFulkerson = require("./FordFulkerson/FordFulkerson");
+
 const match = (candidates, interviewers, config) => {
     const slots = getSlots(candidates, interviewers);
-    const { capacities, graph_nodes_map } = buildCapacitiesGraph(candidates, interviewers, slots);
+    const { capacities, graph_nodes_map, graph_info } = buildCapacitiesGraph(candidates, interviewers, slots);
     populateCapacitiesGraph(candidates, interviewers, slots, capacities, graph_nodes_map, config);
     pruneCapacitiesGraph(interviewers, capacities, graph_nodes_map, config);
-    return "TO DO";
+
+    const ff = new FordFulkerson(capacities, graph_info);
+    return ff.calcMaxFlow();
 };
 
 const getSlots = (candidates, interviewers) => {

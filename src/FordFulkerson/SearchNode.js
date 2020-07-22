@@ -1,11 +1,7 @@
 class SearchNode {
-    constructor(id, depth, prev = null) {
+    constructor(id, prev = null) {
         if (isNaN(id) && !id) {
             throw new Error("Missing node 'id'");
-        }
-
-        if (isNaN(depth) && !depth) {
-            throw new Error("Missing node 'depth'");
         }
 
         if (prev !== null && !(prev instanceof SearchNode)) {
@@ -13,8 +9,8 @@ class SearchNode {
         }
 
         this.id = id;
-        this.depth = depth;
         this.prev = prev;
+        this.depth = prev === null ? 0 : prev.depth + 1;
     }
 }
 

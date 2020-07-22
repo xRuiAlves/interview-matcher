@@ -4,12 +4,10 @@
   "packageManager": "npm",
   "reporters": [
     "clear-text",
-    "progress",
-    "dashboard"
+    "progress"
   ],
   "dashboard": {
     "baseUrl": "https://dashboard.stryker-mutator.io/api/reports",
-    "reportType": "mutationScore",
     "project": "github.com/xRuiAlves/interview-matcher",
     "version": "master",
     "reportType": "full"

@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node src/main.js",
     "test": "jest --coverage",
-    "test:cov": "npm test && coveralls < coverage/lcov.info",
+    "test:publish": "npm test && coveralls < coverage/lcov.info",
     "test:mutation": "stryker run",
+    "test:mutation:publish": "stryker run --reporters clear-text,progress,dots,dashboard",
     "lint": "./node_modules/.bin/eslint test/**/*.js src/**/*.js"
   },
   "keywords": [

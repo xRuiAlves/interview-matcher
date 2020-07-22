@@ -36,10 +36,10 @@ jobs:
           at: .
       - run:
           name: Unit tests
-          command: npm test
+          command: npm run test:publish
       - run:
           name: Mutation tests
-          command: npm run test:mutation
+          command: npm run test:mutation:publish
   audit:
     docker: *docker
     steps:
