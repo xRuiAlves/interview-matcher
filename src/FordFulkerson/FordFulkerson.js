@@ -63,6 +63,18 @@ class FordFulkerson {
                             to_visit.push(new SearchNode(slot_filter, node));
                         }
                     });
+                } else if (node.depth === 3) {
+                    const candidates = this.sortCandidatesByDescendingAssignedSlots();
+                    const slot_filters = [...this.graph_info.slot_filters];
+                    const neighbors = slot_filters.concat(candidates);
+
+                    neighbors.forEach((i) => {
+                        const residual_val = this.capacities[node.id][i] - this.flows[node.id][i];
+                        if (residual_val > 0) {
+                            const neighbor = new SearchNode(i, node);
+                            to_visit.push(neighbor);
+                        }
+                    });
                 } else {
                     for (let i = 0; i < this.capacities.length; ++i) {
                         const residual_val = this.capacities[node.id][i] - this.flows[node.id][i];
@@ -110,11 +122,18 @@ class FordFulkerson {
             .map(([id, _count]) => id);
     }
 
-    // isSlotComplete(slot_filter_id) {
-    //     const target_slot_id = slot_filter_id + this.graph_info.slot_filters.size;
-    //     return this.flows[slot_filter_id][this.sink_node] === this.capacities[slot_filter_id][this.sink_node]
-    //         && this.flows[slot_filter_id][target_slot_id] === this.capacities[slot_filter_id][target_slot_id];
-    // }
+    sortCandidatesByDescendingAssignedSlots() {
+        const candidates = [];
+        this.graph_info.candidates.forEach((candidate) => {
+            if (this.flows[candidate][this.sink_node] === 1) {
+                candidates.unshift(candidate);
+            } else {
+                candidates.push(candidate);
+            }
+        });
+
+        return candidates;
+    }
 
     static buildIncrementalPath(path_end) {
         let current_node = path_end;

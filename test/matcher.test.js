@@ -1,9 +1,11 @@
-const { getSlots, buildCapacitiesGraph, populateCapacitiesGraph, pruneCapacitiesGraph } = require("../src/matcher");
-const { hashEntity, dehashEntity } = require("../src/entities");
+const { match, getSlots, buildCapacitiesGraph, populateCapacitiesGraph, pruneCapacitiesGraph } = require("../src/matcher");
+const { hashEntity } = require("../src/entities");
 const candidates = require("./fixtures/valid_candidates.json");
 const interviewers = require("./fixtures/valid_interviewers.json");
 const candidates2 = require("./fixtures/valid_candidates_2.json");
 const interviewers2 = require("./fixtures/valid_interviewers_2.json");
+const candidates3 = require("./fixtures/valid_candidates_3.json");
+const interviewers3 = require("./fixtures/valid_interviewers_3.json");
 
 describe("Extract all existing slots", () => {
     it("should get all slots from candidates/interviewers options", () => {
@@ -278,5 +280,104 @@ describe("Prune ford fulkerson capacity matrix with unfeasible slots", () => {
                 }
             }
         }
+    });
+});
+
+
+describe("Build all matches from given flow results", () => {
+    it("should return no matches if no assignment is possible", () => {
+        const config = {
+            interviewers_per_slot: 3,
+            max_interviews_per_interviewer: 5,
+        };
+
+        const matches = match(candidates3, interviewers3, config);
+        expect(matches.length).toBe(0);
+    });
+
+    it("should return all posible matches depending on given configuration", () => {
+        const visited_slots = new Set();
+        const visited_candidates = new Set();
+
+        const matches1 = match(candidates2, interviewers2, {
+            interviewers_per_slot: 2,
+            max_interviews_per_interviewer: 3,
+        });
+        expect(matches1.length).toBe(3);
+        matches1.forEach((match) => {
+            expect(match.interviewers.length).toBe(2);
+            expect(visited_slots.has(match.slot)).toBe(false);
+            expect(visited_candidates.has(match.candidate)).toBe(false);
+            visited_slots.add(match.slot);
+            visited_candidates.add(match.candidate);
+        });
+        visited_slots.clear();
+        visited_candidates.clear();
+
+        const matches2 = match(candidates2, interviewers2, {
+            interviewers_per_slot: 2,
+            max_interviews_per_interviewer: 2,
+        });
+        expect(matches2.length).toBe(2);
+        matches2.forEach((match) => {
+            expect(match.interviewers.length).toBe(2);
+            expect(visited_slots.has(match.slot)).toBe(false);
+            expect(visited_candidates.has(match.candidate)).toBe(false);
+            visited_slots.add(match.slot);
+            visited_candidates.add(match.candidate);
+        });
+        visited_slots.clear();
+        visited_candidates.clear();
+
+        const matches3 = match(candidates2, interviewers2, {
+            interviewers_per_slot: 3,
+            max_interviews_per_interviewer: 3,
+        });
+        expect(matches3.length).toBe(0);
+
+        const matches4 = match(candidates, interviewers, {
+            interviewers_per_slot: 2,
+            max_interviews_per_interviewer: 5,
+        });
+        expect(matches4.length).toBe(1);
+        matches4.forEach((match) => {
+            expect(match.interviewers.length).toBe(2);
+            expect(visited_slots.has(match.slot)).toBe(false);
+            expect(visited_candidates.has(match.candidate)).toBe(false);
+            visited_slots.add(match.slot);
+            visited_candidates.add(match.candidate);
+        });
+        visited_slots.clear();
+        visited_candidates.clear();
+
+        const matches5 = match(candidates, interviewers, {
+            interviewers_per_slot: 1,
+            max_interviews_per_interviewer: 2,
+        });
+        expect(matches5.length).toBe(4);
+        matches5.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+            expect(visited_slots.has(match.slot)).toBe(false);
+            expect(visited_candidates.has(match.candidate)).toBe(false);
+            visited_slots.add(match.slot);
+            visited_candidates.add(match.candidate);
+        });
+        visited_slots.clear();
+        visited_candidates.clear();
+
+        const matches6 = match(candidates, interviewers, {
+            interviewers_per_slot: 1,
+            max_interviews_per_interviewer: 1,
+        });
+        expect(matches6.length).toBe(3);
+        matches6.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+            expect(visited_slots.has(match.slot)).toBe(false);
+            expect(visited_candidates.has(match.candidate)).toBe(false);
+            visited_slots.add(match.slot);
+            visited_candidates.add(match.candidate);
+        });
+        visited_slots.clear();
+        visited_candidates.clear();
     });
 });

@@ -151,6 +151,35 @@ describe("Sort slots by ascending number of interviewers", () => {
     });
 });
 
+describe("Sort candidates by descending order of assigned slots", () => {
+    it("should sort the candidates by ascending number of assigned slots (1 or 0)", () => {
+        const capacities = Array(15).fill().map(() => Array(15).fill(0));
+        const graph_info = {
+            interviewers: new Set([1]),
+            slot_filters: new Set([2, 3, 4]),
+            slots: new Set([5, 6, 7]),
+            candidates: new Set([8, 9, 10, 11, 12, 13]),
+        };
+        graph_info.candidates.forEach((candidate) => {
+            capacities[candidate][14] = 1;
+        });
+
+        const ff = new FordFulkerson(capacities, graph_info);
+        ff.flows[9][14] = 1;
+        ff.flows[11][14] = 1;
+        ff.flows[12][14] = 1;
+
+        const sorted_slot_filters = ff.sortCandidatesByDescendingAssignedSlots();
+        expect(sorted_slot_filters.length).toBe(6);
+        expect(ff.flows[sorted_slot_filters[0]][14]).toBe(1);
+        expect(ff.flows[sorted_slot_filters[1]][14]).toBe(1);
+        expect(ff.flows[sorted_slot_filters[2]][14]).toBe(1);
+        expect(ff.flows[sorted_slot_filters[3]][14]).toBe(0);
+        expect(ff.flows[sorted_slot_filters[4]][14]).toBe(0);
+        expect(ff.flows[sorted_slot_filters[5]][14]).toBe(0);
+    });
+});
+
 describe("Build an incremental path from a graph search result", () => {
     it("should build the incremental path given the path's final search node", () => {
         const s1 = new SearchNode(1);

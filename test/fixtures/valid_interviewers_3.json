@@ -1,0 +1,26 @@
+[
+    {
+        "id": "Inteviewer A",
+        "slots": [
+            "slot 1",
+            "slot 2",
+            "slot 3"
+        ]
+    },
+    {
+        "id": "Inteviewer B",
+        "slots": [
+            "slot 4",
+            "slot 5",
+            "slot 6"
+        ]
+    },
+    {
+        "id": "Inteviewer C",
+        "slots": [
+            "slot 7",
+            "slot 8",
+            "slot 9"
+        ]
+    }
+]

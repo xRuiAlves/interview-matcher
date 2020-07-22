@@ -42,10 +42,5 @@ const main = () => {
     return match(candidates, interviewers, config);
 };
 
-try {
-    const res = main();
-    console.log(res);
-} catch (e) {
-    printError(e.err, e.msg);
-    process.exit(e.err.code);
-}
+const res = main();
+console.log(res);
