@@ -1,4 +1,5 @@
 const { getSlots, buildCapacitiesGraph, populateCapacitiesGraph, pruneCapacitiesGraph } = require("../src/matcher");
+const { hashEntity, dehashEntity } = require("../src/entities");
 const candidates = require("./fixtures/valid_candidates.json");
 const interviewers = require("./fixtures/valid_interviewers.json");
 const candidates2 = require("./fixtures/valid_candidates_2.json");
@@ -43,22 +44,22 @@ describe("Build matches matrix for ford fulkerson algorithm applying", () => {
 
         offset += 1;
         interviewers.forEach((interviewer, i) => {
-            expect(graph_nodes_map1[`interviewer_${interviewer.id}`]).toBe(offset + i);
+            expect(graph_nodes_map1[hashEntity("interviewer", interviewer.id)]).toBe(offset + i);
         });
 
         offset += interviewers.length;
         slots.forEach((slot, i) => {
-            expect(graph_nodes_map1[`slot_filter_${slot}`]).toBe(offset + i);
+            expect(graph_nodes_map1[hashEntity("slot_filter", slot)]).toBe(offset + i);
         });
 
         offset += slots.length;
         slots.forEach((slot, i) => {
-            expect(graph_nodes_map1[`slot_${slot}`]).toBe(offset + i);
+            expect(graph_nodes_map1[hashEntity("slot", slot)]).toBe(offset + i);
         });
 
         offset += slots.length;
         candidates.forEach((candidate, i) => {
-            expect(graph_nodes_map1[`candidate_${candidate.id}`]).toBe(offset + i);
+            expect(graph_nodes_map1[hashEntity("candidate", candidate.id)]).toBe(offset + i);
         });
 
         offset += candidates.length;
@@ -74,22 +75,22 @@ describe("Build matches matrix for ford fulkerson algorithm applying", () => {
 
         offset += 1;
         interviewers2.forEach((interviewer, i) => {
-            expect(graph_nodes_map2[`interviewer_${interviewer.id}`]).toBe(offset + i);
+            expect(graph_nodes_map2[hashEntity("interviewer", interviewer.id)]).toBe(offset + i);
         });
 
         offset += interviewers2.length;
         slots2.forEach((slot, i) => {
-            expect(graph_nodes_map2[`slot_filter_${slot}`]).toBe(offset + i);
+            expect(graph_nodes_map2[hashEntity("slot_filter", slot)]).toBe(offset + i);
         });
 
         offset += slots2.length;
         slots2.forEach((slot, i) => {
-            expect(graph_nodes_map2[`slot_${slot}`]).toBe(offset + i);
+            expect(graph_nodes_map2[hashEntity("slot", slot)]).toBe(offset + i);
         });
 
         offset += slots2.length;
         candidates2.forEach((candidate, i) => {
-            expect(graph_nodes_map2[`candidate_${candidate.id}`]).toBe(offset + i);
+            expect(graph_nodes_map2[hashEntity("candidate", candidate.id)]).toBe(offset + i);
         });
 
         offset += candidates2.length;

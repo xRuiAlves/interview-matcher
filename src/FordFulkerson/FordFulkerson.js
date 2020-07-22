@@ -110,6 +110,12 @@ class FordFulkerson {
             .map(([id, _count]) => id);
     }
 
+    // isSlotComplete(slot_filter_id) {
+    //     const target_slot_id = slot_filter_id + this.graph_info.slot_filters.size;
+    //     return this.flows[slot_filter_id][this.sink_node] === this.capacities[slot_filter_id][this.sink_node]
+    //         && this.flows[slot_filter_id][target_slot_id] === this.capacities[slot_filter_id][target_slot_id];
+    // }
+
     static buildIncrementalPath(path_end) {
         let current_node = path_end;
         const path = [];

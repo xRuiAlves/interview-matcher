@@ -39,6 +39,14 @@ const ERRORS = Object.freeze({
         code: 10,
         description: "Failed file parsing",
     },
+    INVALID_INTERVIEWERS_PER_SLOT: {
+        code: 11,
+        description: "Invalid specification of interviewers per slot. Should be a positive integer.",
+    },
+    INVALID_MAX_INTERVIEWS_PER_INTERVIEWER: {
+        code: 12,
+        description: "Invalid specification of max interviews per interviewer. Should be a positive integer.",
+    },
 });
 
 module.exports = ERRORS;
