@@ -22,7 +22,6 @@ class FordFulkerson {
     calcMaxFlow() {
         while (true) {
             const incremental_path = this.searchIncrementalPath();
-            console.log(incremental_path);
             if (!incremental_path) {
                 break;
             }
@@ -71,7 +70,7 @@ class FordFulkerson {
                             const neighbor = new SearchNode(i, node);
                             to_visit.push(neighbor);
                             if (neighbor.id === this.sink_node) {
-                                return this.buildIncrementalPath(neighbor);
+                                return FordFulkerson.buildIncrementalPath(neighbor);
                             }
                         }
                     }
@@ -90,8 +89,8 @@ class FordFulkerson {
         });
 
         return Object.entries(interviewers_work_count)
-            .sort(([_id1, count1], [_id2, count2]) => count1 - count2)
             .filter(([_id, count]) => count > 0)
+            .sort(([_id1, count1], [_id2, count2]) => count1 - count2)
             .map(([id, _count]) => id);
     }
 
@@ -106,12 +105,12 @@ class FordFulkerson {
         });
 
         return Object.entries(slots_interviewers_count)
-            .sort(([_id1, count1], [_id2, count2]) => count2 - count1)
             .filter(([_id, count]) => count > 0)
+            .sort(([_id1, count1], [_id2, count2]) => count2 - count1)
             .map(([id, _count]) => id);
     }
 
-    buildIncrementalPath(path_end) {
+    static buildIncrementalPath(path_end) {
         let current_node = path_end;
         const path = [];
 

@@ -13,6 +13,7 @@
     "reportType": "full"
   },
   "testRunner": "jest",
+  "maxConcurrentTestRunners": 4,
   "mutate": [
     "src/**/*.js",
     "!src/printer.js",
