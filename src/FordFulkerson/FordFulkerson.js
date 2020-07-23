@@ -42,31 +42,46 @@ class FordFulkerson {
         to_visit.push(new SearchNode(this.source_node));
 
         while (!(to_visit.length === 0)) {
-            const node = to_visit.pop();
+            const node = to_visit.shift();
+
+            if (node.id === this.sink_node) {
+                return FordFulkerson.buildIncrementalPath(node);
+            }
 
             if (!visited.has(node.id)) {
                 visited.add(node.id);
 
-                if (node.depth === 0) {
-                    const interviewers = this.sortInterviewersByDescendingWork();
+                if (node.id === 0) {
+                    const interviewers = this.sortInterviewersByAscendingWork();
                     interviewers.forEach((interviewer) => {
                         const residual_val = this.capacities[node.id][interviewer] - this.flows[node.id][interviewer];
                         if (residual_val > 0) {
                             to_visit.push(new SearchNode(interviewer, node));
                         }
                     });
-                } else if (node.depth === 1) {
-                    const slot_filters = this.sortSlotsByAscendingNumInterviewers();
+                } else if (this.graph_info.interviewers.has(node.id)) {
+                    const slot_filters = this.sortSlotsByDescendingNumInterviewers();
                     slot_filters.forEach((slot_filter) => {
                         const residual_val = this.capacities[node.id][slot_filter] - this.flows[node.id][slot_filter];
                         if (residual_val > 0) {
                             to_visit.push(new SearchNode(slot_filter, node));
                         }
                     });
-                } else if (node.depth === 3) {
-                    const candidates = this.sortCandidatesByDescendingAssignedSlots();
+                } else if (this.graph_info.slot_filters.has(node.id)) {
+                    for (let i = this.capacities.length - 1; i >= 0; --i) {
+                        const residual_val = this.capacities[node.id][i] - this.flows[node.id][i];
+                        if (residual_val > 0) {
+                            if (i === this.sink_node && this.flows[node.id][node.id + this.graph_info.slot_filters.size] === 0) {
+                                continue;
+                            }
+                            const neighbor = new SearchNode(i, node);
+                            to_visit.push(neighbor);
+                        }
+                    }
+                } else if (this.graph_info.slots.has(node.id)) {
+                    const candidates = this.sortCandidatesByAscendingAssignedSlots();
                     const slot_filters = [...this.graph_info.slot_filters];
-                    const neighbors = slot_filters.concat(candidates);
+                    const neighbors = candidates.concat(slot_filters);
 
                     neighbors.forEach((i) => {
                         const residual_val = this.capacities[node.id][i] - this.flows[node.id][i];
@@ -76,14 +91,11 @@ class FordFulkerson {
                         }
                     });
                 } else {
-                    for (let i = 0; i < this.capacities.length; ++i) {
+                    for (let i = this.capacities.length - 1; i >= 0; --i) {
                         const residual_val = this.capacities[node.id][i] - this.flows[node.id][i];
                         if (residual_val > 0) {
                             const neighbor = new SearchNode(i, node);
                             to_visit.push(neighbor);
-                            if (neighbor.id === this.sink_node) {
-                                return FordFulkerson.buildIncrementalPath(neighbor);
-                            }
                         }
                     }
                 }
@@ -93,7 +105,7 @@ class FordFulkerson {
         return null;
     }
 
-    sortInterviewersByDescendingWork() {
+    sortInterviewersByAscendingWork() {
         const interviewers_work_count = {};
         this.graph_info.interviewers.forEach((interviewer) => {
             const residual_val = this.capacities[0][interviewer] - this.flows[0][interviewer];
@@ -102,11 +114,11 @@ class FordFulkerson {
 
         return Object.entries(interviewers_work_count)
             .filter(([_id, count]) => count > 0)
-            .sort(([_id1, count1], [_id2, count2]) => count1 - count2)
-            .map(([id, _count]) => id);
+            .sort(([_id1, count1], [_id2, count2]) => count2 - count1)
+            .map(([id, _count]) => parseInt(id, 10));
     }
 
-    sortSlotsByAscendingNumInterviewers() {
+    sortSlotsByDescendingNumInterviewers() {
         const slots_interviewers_count = {};
         this.graph_info.slot_filters.forEach((slot) => {
             const slot_id = parseInt(slot, 10);
@@ -118,17 +130,17 @@ class FordFulkerson {
 
         return Object.entries(slots_interviewers_count)
             .filter(([_id, count]) => count > 0)
-            .sort(([_id1, count1], [_id2, count2]) => count2 - count1)
-            .map(([id, _count]) => id);
+            .sort(([_id1, count1], [_id2, count2]) => count1 - count2)
+            .map(([id, _count]) => parseInt(id, 10));
     }
 
-    sortCandidatesByDescendingAssignedSlots() {
+    sortCandidatesByAscendingAssignedSlots() {
         const candidates = [];
         this.graph_info.candidates.forEach((candidate) => {
             if (this.flows[candidate][this.sink_node] === 1) {
-                candidates.unshift(candidate);
-            } else {
                 candidates.push(candidate);
+            } else {
+                candidates.unshift(candidate);
             }
         });
 

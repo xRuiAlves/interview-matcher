@@ -291,93 +291,104 @@ describe("Build all matches from given flow results", () => {
             max_interviews_per_interviewer: 5,
         };
 
-        const matches = match(candidates3, interviewers3, config);
-        expect(matches.length).toBe(0);
+        const output = match(candidates3, interviewers3, config);
+        expect(output.matches.length).toBe(0);
+        expect(Object.entries(output.interviews_per_interviewer).length).toBe(interviewers3.length);
+        Object.entries(output.interviews_per_interviewer).forEach(([_name, count]) => {
+            expect(count).toBe(0);
+        });
     });
 
     it("should return all posible matches depending on given configuration", () => {
         const visited_slots = new Set();
         const visited_candidates = new Set();
 
-        const matches1 = match(candidates2, interviewers2, {
+        const output1 = match(candidates2, interviewers2, {
             interviewers_per_slot: 2,
             max_interviews_per_interviewer: 3,
         });
-        expect(matches1.length).toBe(3);
-        matches1.forEach((match) => {
+        expect(output1.matches.length).toBe(3);
+        output1.matches.forEach((match) => {
             expect(match.interviewers.length).toBe(2);
             expect(visited_slots.has(match.slot)).toBe(false);
             expect(visited_candidates.has(match.candidate)).toBe(false);
             visited_slots.add(match.slot);
             visited_candidates.add(match.candidate);
         });
+        expect(Object.entries(output1.interviews_per_interviewer).length).toBe(interviewers2.length);
+        Object.entries(output1.interviews_per_interviewer).forEach(([name, count]) => {
+            expect(typeof name).toBe("string");
+            expect(typeof count).toBe("number");
+        });
         visited_slots.clear();
         visited_candidates.clear();
 
-        const matches2 = match(candidates2, interviewers2, {
+        const output2 = match(candidates2, interviewers2, {
             interviewers_per_slot: 2,
             max_interviews_per_interviewer: 2,
         });
-        expect(matches2.length).toBe(2);
-        matches2.forEach((match) => {
+        expect(output2.matches.length).toBe(2);
+        output2.matches.forEach((match) => {
             expect(match.interviewers.length).toBe(2);
             expect(visited_slots.has(match.slot)).toBe(false);
             expect(visited_candidates.has(match.candidate)).toBe(false);
             visited_slots.add(match.slot);
             visited_candidates.add(match.candidate);
         });
+        expect(Object.values(output2.interviews_per_interviewer).length).toBe(interviewers2.length);
         visited_slots.clear();
         visited_candidates.clear();
 
-        const matches3 = match(candidates2, interviewers2, {
+        const output3 = match(candidates2, interviewers2, {
             interviewers_per_slot: 3,
             max_interviews_per_interviewer: 3,
         });
-        expect(matches3.length).toBe(0);
+        expect(output3.matches.length).toBe(0);
 
-        const matches4 = match(candidates, interviewers, {
+        const output4 = match(candidates, interviewers, {
             interviewers_per_slot: 2,
             max_interviews_per_interviewer: 5,
         });
-        expect(matches4.length).toBe(1);
-        matches4.forEach((match) => {
+        expect(output4.matches.length).toBe(1);
+        output4.matches.forEach((match) => {
             expect(match.interviewers.length).toBe(2);
             expect(visited_slots.has(match.slot)).toBe(false);
             expect(visited_candidates.has(match.candidate)).toBe(false);
             visited_slots.add(match.slot);
             visited_candidates.add(match.candidate);
         });
+        expect(Object.values(output4.interviews_per_interviewer).length).toBe(interviewers.length);
         visited_slots.clear();
         visited_candidates.clear();
 
-        const matches5 = match(candidates, interviewers, {
+        const output5 = match(candidates, interviewers, {
             interviewers_per_slot: 1,
             max_interviews_per_interviewer: 2,
         });
-        expect(matches5.length).toBe(4);
-        matches5.forEach((match) => {
+        expect(output5.matches.length).toBe(4);
+        output5.matches.forEach((match) => {
             expect(match.interviewers.length).toBe(1);
             expect(visited_slots.has(match.slot)).toBe(false);
             expect(visited_candidates.has(match.candidate)).toBe(false);
             visited_slots.add(match.slot);
             visited_candidates.add(match.candidate);
         });
+        expect(Object.values(output5.interviews_per_interviewer).length).toBe(interviewers.length);
         visited_slots.clear();
         visited_candidates.clear();
 
-        const matches6 = match(candidates, interviewers, {
+        const output6 = match(candidates, interviewers, {
             interviewers_per_slot: 1,
             max_interviews_per_interviewer: 1,
         });
-        expect(matches6.length).toBe(3);
-        matches6.forEach((match) => {
+        expect(output6.matches.length).toBe(3);
+        output6.matches.forEach((match) => {
             expect(match.interviewers.length).toBe(1);
             expect(visited_slots.has(match.slot)).toBe(false);
             expect(visited_candidates.has(match.candidate)).toBe(false);
             visited_slots.add(match.slot);
             visited_candidates.add(match.candidate);
         });
-        visited_slots.clear();
-        visited_candidates.clear();
+        expect(Object.values(output5.interviews_per_interviewer).length).toBe(interviewers.length);
     });
 });

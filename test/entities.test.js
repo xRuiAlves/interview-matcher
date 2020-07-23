@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { hashEntity, dehashEntity } = require("../src/entities");
 
 describe("Hash and dehash entities (interviewer, candidate, slot, slot_filter)", () => {
@@ -20,5 +21,11 @@ describe("Hash and dehash entities (interviewer, candidate, slot, slot_filter)",
         expect(dehashEntity("candidate", hashEntity("candidate", "B"))).toBe("B");
         expect(dehashEntity("slot_filter", hashEntity("slot_filter", "C"))).toBe("C");
         expect(dehashEntity("slot", hashEntity("slot", "D"))).toBe("D");
+    });
+
+    it("should fail on incorrect reverse hashing", () => {
+        expect(() => {
+            dehashEntity("candidate", "interviewer_A");
+        }).toThrowError("Invalid hash type");
     });
 });

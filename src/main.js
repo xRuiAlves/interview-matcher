@@ -63,18 +63,18 @@ const main = async () => {
         max_interviews_per_interviewer: parseInt(max_interviews_per_interviewer, 10),
     };
 
-    const matches = match(candidates, interviewers, config);
+    const output = match(candidates, interviewers, config);
 
-    if (matches.length === 0) {
+    if (output.matches.length === 0) {
         throw { err: ERRORS.NO_ASSIGNMENT_AVAILABLE };
     }
 
-    if (matches.length < candidates.length) {
+    if (output.matches.length < candidates.length) {
         console.info("Failed to assign all candidates to interview slots. All the possible assignments have been exported.");
     }
 
     writeJSONtoFile(
-        input_type === INPUT_TYPE_FLAGS.DOODLE ? doodlifyOutput(matches) : matches,
+        input_type === INPUT_TYPE_FLAGS.DOODLE ? doodlifyOutput(output) : output,
         output_file,
     );
 };

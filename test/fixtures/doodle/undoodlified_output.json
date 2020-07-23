@@ -1,26 +1,32 @@
-[
-    {
-        "slot": "1601456400000-1601458200000",
-        "interviewers": [
-            "Interviewer A_1729459786",
-            "Interviewer B_1810429890"
-        ],
-        "candidate": "Candidate A_1712034735"
-    },
-    {
-        "slot": "1601460000000-1601461800000",
-        "interviewers": [
-            "Interviewer A_1729459786",
-            "Interviewer B_1810429890"
-        ],
-        "candidate": "Candidate B_841119036"
-    },
-    {
-        "slot": "1601463600000-1601465400000",
-        "interviewers": [
-            "Interviewer A_1729459786",
-            "Interviewer B_1810429890"
-        ],
-        "candidate": "Candidate C_1977005371"
+{
+    "matches": [
+        {
+            "slot": "1601456400000-1601458200000",
+            "interviewers": [
+                "Interviewer A_1729459786",
+                "Interviewer B_1810429890"
+            ],
+            "candidate": "Candidate A_1712034735"
+        },
+        {
+            "slot": "1601460000000-1601461800000",
+            "interviewers": [
+                "Interviewer A_1729459786",
+                "Interviewer B_1810429890"
+            ],
+            "candidate": "Candidate B_841119036"
+        },
+        {
+            "slot": "1601463600000-1601465400000",
+            "interviewers": [
+                "Interviewer A_1729459786",
+                "Interviewer B_1810429890"
+            ],
+            "candidate": "Candidate C_1977005371"
+        }
+    ],
+    "interviews_per_interviewer": {
+        "Interviewer A_1729459786": 3,
+        "Interviewer B_1810429890": 3
     }
-]
+}

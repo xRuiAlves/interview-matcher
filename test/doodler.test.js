@@ -139,24 +139,43 @@ describe("Convert internal entity to doodle entity", () => {
 describe("Convert standard output format to doodle-like output format", () => {
     it("should convert standard output format to doodle-like output format", () => {
         const doodle_output = doodlifyOutput(undoodlified_output);
-        expect(Array.isArray(doodle_output)).toBe(true);
-        expect(doodle_output.length).toBe(3);
+        expect(Array.isArray(doodle_output.matches)).toBe(true);
+        expect(doodle_output.matches.length).toBe(3);
 
-        doodle_output.forEach((match) => {
+        doodle_output.matches.forEach((match) => {
             expect(match.slot).toBeDefined();
             expect(match.slot.start).toBeDefined();
+            expect(typeof match.slot.start).toBe("string");
+            expect(typeof match.slot.start.length).not.toBe(0);
             expect(match.slot.end).toBeDefined();
+            expect(typeof match.slot.end).toBe("string");
+            expect(typeof match.slot.end.length).not.toBe(0);
 
             expect(match.candidate).toBeDefined();
             expect(match.candidate.name).toBeDefined();
+            expect(typeof match.candidate.name).toBe("string");
+            expect(typeof match.candidate.name.length).not.toBe(0);
             expect(match.candidate.id).toBeDefined();
+            expect(typeof match.candidate.id).toBe("string");
+            expect(typeof match.candidate.id.length).not.toBe(0);
 
             expect(match.interviewers).toBeDefined();
             expect(Array.isArray(match.interviewers)).toBe(true);
             match.interviewers.forEach((interviewer) => {
                 expect(interviewer.name).toBeDefined();
+                expect(typeof interviewer.name).toBe("string");
+                expect(typeof interviewer.name.length).not.toBe(0);
                 expect(interviewer.id).toBeDefined();
+                expect(typeof interviewer.id).toBe("string");
+                expect(typeof interviewer.id.length).not.toBe(0);
             });
+        });
+
+        expect(Object.entries(doodle_output.interviews_per_interviewer).length).toBe(2);
+        Object.entries(doodle_output.interviews_per_interviewer).forEach(([name, count]) => {
+            expect(typeof name).toBe("string");
+            expect(name.includes("_")).toBe(false);
+            expect(typeof count).toBe("number");
         });
     });
 });

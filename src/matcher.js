@@ -147,7 +147,6 @@ const buildMatchesFromFlows = (flows, graph_nodes_map, graph_info, config) => {
         graph_reverse_nodes_map[node_id] = node_name;
     });
 
-
     // compute slots that have a candidate and the required number of interviewers
     const complete_slots = [...graph_info.slot_filters].filter((slot_filter) => {
         const slot = slot_filter + graph_info.slot_filters.size;
@@ -155,6 +154,7 @@ const buildMatchesFromFlows = (flows, graph_nodes_map, graph_info, config) => {
     });
 
     // build slots output schema
+    const interviews_per_interviewer = {};
     const matches = {};
     complete_slots.forEach((slot_filter_id) => {
         matches[slot_filter_id] = {
@@ -176,14 +176,20 @@ const buildMatchesFromFlows = (flows, graph_nodes_map, graph_info, config) => {
 
     // find the interviewers assigned to each slot
     graph_info.interviewers.forEach((interviewer_id) => {
+        interviews_per_interviewer[dehashEntity("interviewer", graph_reverse_nodes_map[interviewer_id])] = 0;
         complete_slots.forEach((slot_filter_id) => {
             if (flows[interviewer_id][slot_filter_id] === 1) {
-                matches[slot_filter_id].interviewers.push(dehashEntity("interviewer", graph_reverse_nodes_map[interviewer_id]));
+                const interviewer_name = dehashEntity("interviewer", graph_reverse_nodes_map[interviewer_id]);
+                matches[slot_filter_id].interviewers.push(interviewer_name);
+                ++interviews_per_interviewer[interviewer_name];
             }
         });
     });
 
-    return Object.values(matches);
+    return {
+        matches: Object.values(matches).sort((match1, match2) => match1.candidate.localeCompare(match2.candidate)),
+        interviews_per_interviewer,
+    };
 };
 
 module.exports = {

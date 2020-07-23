@@ -48,8 +48,8 @@ describe("Create ford fulkerson calculator", () => {
     });
 });
 
-describe("Sort intervieweres by descending work amount", () => {
-    it("should sort the interviewers by descending number of assigned slots", () => {
+describe("Sort intervieweres by ascending work amount", () => {
+    it("should sort the interviewers by ascending number of assigned slots", () => {
         const capacities = Array(12).fill().map(() => Array(12).fill(0));
         const graph_info = {
             interviewers: new Set([1, 2, 3]),
@@ -66,11 +66,11 @@ describe("Sort intervieweres by descending work amount", () => {
         ff.flows[0][2] = 1;
         ff.flows[0][3] = 3;
 
-        const sorted_interviewers = ff.sortInterviewersByDescendingWork();
+        const sorted_interviewers = ff.sortInterviewersByAscendingWork();
         expect(sorted_interviewers.length).toBe(3);
-        expect(sorted_interviewers[0]).toBe("1");
-        expect(sorted_interviewers[1]).toBe("3");
-        expect(sorted_interviewers[2]).toBe("2");
+        expect(sorted_interviewers[0]).toBe(2);
+        expect(sorted_interviewers[1]).toBe(3);
+        expect(sorted_interviewers[2]).toBe(1);
 
 
         const capacities2 = Array(13).fill().map(() => Array(13).fill(0));
@@ -90,15 +90,15 @@ describe("Sort intervieweres by descending work amount", () => {
         ff2.flows[0][3] = 2;
         ff2.flows[0][4] = 5;
 
-        const sorted_interviewers2 = ff2.sortInterviewersByDescendingWork();
+        const sorted_interviewers2 = ff2.sortInterviewersByAscendingWork();
         expect(sorted_interviewers2.length).toBe(2);
-        expect(sorted_interviewers2[0]).toBe("3");
-        expect(sorted_interviewers2[1]).toBe("1");
+        expect(sorted_interviewers2[0]).toBe(1);
+        expect(sorted_interviewers2[1]).toBe(3);
     });
 });
 
-describe("Sort slots by ascending number of interviewers", () => {
-    it("should sort the slot filters by ascending number of assigned interviewers", () => {
+describe("Sort slots by descending number of interviewers", () => {
+    it("should sort the slot filters by descending number of assigned interviewers", () => {
         const capacities = Array(12).fill().map(() => Array(12).fill(0));
         const graph_info = {
             interviewers: new Set([1, 2, 3]),
@@ -116,11 +116,11 @@ describe("Sort slots by ascending number of interviewers", () => {
         ff.flows[4][11] = 1;
         ff.flows[5][8] = 1;
 
-        const sorted_slot_filters = ff.sortSlotsByAscendingNumInterviewers();
+        const sorted_slot_filters = ff.sortSlotsByDescendingNumInterviewers();
         expect(sorted_slot_filters.length).toBe(3);
-        expect(sorted_slot_filters[0]).toBe("6");
-        expect(sorted_slot_filters[1]).toBe("5");
-        expect(sorted_slot_filters[2]).toBe("4");
+        expect(sorted_slot_filters[0]).toBe(4);
+        expect(sorted_slot_filters[1]).toBe(5);
+        expect(sorted_slot_filters[2]).toBe(6);
 
 
         const capacities2 = Array(14).fill().map(() => Array(14).fill(0));
@@ -144,14 +144,14 @@ describe("Sort slots by ascending number of interviewers", () => {
         ff2.flows[6][10] = 1;
         ff2.flows[6][13] = 1;
 
-        const sorted_slot_filters2 = ff2.sortSlotsByAscendingNumInterviewers();
+        const sorted_slot_filters2 = ff2.sortSlotsByDescendingNumInterviewers();
         expect(sorted_slot_filters2.length).toBe(2);
-        expect(sorted_slot_filters2[0]).toBe("4");
-        expect(sorted_slot_filters2[1]).toBe("6");
+        expect(sorted_slot_filters2[0]).toBe(6);
+        expect(sorted_slot_filters2[1]).toBe(4);
     });
 });
 
-describe("Sort candidates by descending order of assigned slots", () => {
+describe("Sort candidates by ascending order of assigned slots", () => {
     it("should sort the candidates by ascending number of assigned slots (1 or 0)", () => {
         const capacities = Array(15).fill().map(() => Array(15).fill(0));
         const graph_info = {
@@ -169,14 +169,14 @@ describe("Sort candidates by descending order of assigned slots", () => {
         ff.flows[11][14] = 1;
         ff.flows[12][14] = 1;
 
-        const sorted_slot_filters = ff.sortCandidatesByDescendingAssignedSlots();
+        const sorted_slot_filters = ff.sortCandidatesByAscendingAssignedSlots();
         expect(sorted_slot_filters.length).toBe(6);
-        expect(ff.flows[sorted_slot_filters[0]][14]).toBe(1);
-        expect(ff.flows[sorted_slot_filters[1]][14]).toBe(1);
-        expect(ff.flows[sorted_slot_filters[2]][14]).toBe(1);
-        expect(ff.flows[sorted_slot_filters[3]][14]).toBe(0);
-        expect(ff.flows[sorted_slot_filters[4]][14]).toBe(0);
-        expect(ff.flows[sorted_slot_filters[5]][14]).toBe(0);
+        expect(ff.flows[sorted_slot_filters[0]][14]).toBe(0);
+        expect(ff.flows[sorted_slot_filters[1]][14]).toBe(0);
+        expect(ff.flows[sorted_slot_filters[2]][14]).toBe(0);
+        expect(ff.flows[sorted_slot_filters[3]][14]).toBe(1);
+        expect(ff.flows[sorted_slot_filters[4]][14]).toBe(1);
+        expect(ff.flows[sorted_slot_filters[5]][14]).toBe(1);
     });
 });
 

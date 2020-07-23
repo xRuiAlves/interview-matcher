@@ -58,14 +58,24 @@ const convertDoodleData = (doodle_data) => {
 
 const verifyDoodleSlotsMatching = (doodle_data_1, doodle_data_2) => doodle_data_1.options.toString() === doodle_data_2.options.toString();
 
-const doodlifyOutput = (output) => output.map(({ slot, candidate, interviewers }) => {
-    const [start, end] = slot.split("-");
+const doodlifyOutput = ({ matches, interviews_per_interviewer }) => {
+    Object.keys(interviews_per_interviewer).forEach((interviewer) => {
+        interviews_per_interviewer[convertToDoodleEntity(interviewer).name] = interviews_per_interviewer[interviewer];
+        delete interviews_per_interviewer[interviewer];
+    });
+
     return {
-        slot: { start, end },
-        candidate: convertToDoodleEntity(candidate),
-        interviewers: interviewers.map(convertToDoodleEntity),
+        matches: matches.map(({ slot, candidate, interviewers }) => {
+            const [start, end] = slot.split("-");
+            return {
+                slot: { start, end },
+                candidate: convertToDoodleEntity(candidate),
+                interviewers: interviewers.map(convertToDoodleEntity),
+            };
+        }),
+        interviews_per_interviewer,
     };
-});
+};
 
 const convertToDoodleEntity = (entity) => {
     const separator_index = entity.lastIndexOf("_");
