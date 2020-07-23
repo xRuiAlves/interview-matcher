@@ -1,0 +1,154 @@
+{
+  "id": "rp3ugxu4ispv598g",
+  "latestChange": 1595453274584,
+  "initiated": 1595102049070,
+  "participantsCount": 3,
+  "inviteesCount": 0,
+  "type": "DATE",
+  "timeZone": true,
+  "preferencesType": "YESNO",
+  "state": "OPEN",
+  "locale": "en",
+  "title": "Test",
+  "location": {
+    "name": "test"
+  },
+  "description": "test",
+  "initiator": {
+    "name": "john doe",
+    "notify": true,
+    "avatarLargeUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/83d2x8gdqhc713b8xnnkvhlew9rzn9fa",
+    "avatarSmallUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/h12mkif0q61h3wzozpwqshtx4jnfvjh8",
+    "timeZone": "Europe/Lisbon",
+    "userId": "vg0ig8pjxy0a7vhhogim5m866hmx25xd"
+  },
+  "options": [
+    {
+      "start": 1595235600000,
+      "end": 1595237400000,
+      "id": "ae174dd7-4e92-4ad6-9367-86aa941810d1",
+      "startDateTime": 1595235600000,
+      "endDateTime": 1595237400000,
+      "available": true
+    },
+    {
+      "start": 1595237400000,
+      "end": 1595239200000,
+      "id": "f938929e-58f1-4fa0-82d7-73a03b3d33d8",
+      "startDateTime": 1595237400000,
+      "endDateTime": 1595239200000,
+      "available": true
+    },
+    {
+      "start": 1595239200000,
+      "end": 1595241000000,
+      "id": "5997ef86-066f-4cb0-9cfd-fbe31cefa15a",
+      "startDateTime": 1595239200000,
+      "endDateTime": 1595241000000,
+      "available": true
+    },
+    {
+      "start": 1595322000000,
+      "end": 1595323800000,
+      "id": "6eb6f186-535a-43df-a138-c7cdd5a672fb",
+      "startDateTime": 1595322000000,
+      "endDateTime": 1595323800000,
+      "available": true
+    },
+    {
+      "start": 1595323800000,
+      "end": 1595325600000,
+      "id": "a2dac923-cf9f-471f-a1ec-6186cad077c5",
+      "startDateTime": 1595323800000,
+      "endDateTime": 1595325600000,
+      "available": true
+    },
+    {
+      "start": 1595325600000,
+      "end": 1595327400000,
+      "id": "cddb3731-9af7-4efb-b88e-8c3224da9b04",
+      "startDateTime": 1595325600000,
+      "endDateTime": 1595327400000,
+      "available": true
+    },
+    {
+      "start": 1595408400000,
+      "end": 1595410200000,
+      "id": "c0e2108e-8e35-4fbb-a656-db439ddd7db1",
+      "startDateTime": 1595408400000,
+      "endDateTime": 1595410200000,
+      "available": true
+    },
+    {
+      "start": 1595410200000,
+      "end": 1595412000000,
+      "id": "3203e25c-1797-4d64-8d82-471fe09569af",
+      "startDateTime": 1595410200000,
+      "endDateTime": 1595412000000,
+      "available": true
+    },
+    {
+      "start": 1595412000000,
+      "end": 1595413800000,
+      "id": "7964ba87-9b4a-49c7-9988-71c44decb4da",
+      "startDateTime": 1595412000000,
+      "endDateTime": 1595413800000,
+      "available": true
+    }
+  ],
+  "optionsHash": "8f7cf5cc457f22f9fd776758663df12a",
+  "participants": [
+    {
+      "id": 903863635,
+      "name": "john doe",
+      "preferences": [
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "smallAvatarUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/h12mkif0q61h3wzozpwqshtx4jnfvjh8",
+      "largeAvatarUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/83d2x8gdqhc713b8xnnkvhlew9rzn9fa",
+      "userId": "vg0ig8pjxy0a7vhhogim5m866hmx25xd"
+    },
+    {
+      "id": 1129034830,
+      "name": "jane doe",
+      "preferences": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 1263643152,
+      "name": "peter pan",
+      "preferences": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "device": "WEB",
+  "calendarEvents": [],
+  "levels": "YESNO",
+  "isNewSchedulingExperience": false
+}

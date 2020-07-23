@@ -51,6 +51,18 @@ const ERRORS = Object.freeze({
         code: 13,
         description: "Failed to assign any of the candidates to an interview slot, with the given configuration.",
     },
+    NETWORK: {
+        code: 14,
+        description: "Failed to access the remote resource.",
+    },
+    INVALID_DOODLE_DATA_FORMAT: {
+        code: 15,
+        description: "Doodle data format is invalid.",
+    },
+    UNMATCHING_DOODLES: {
+        code: 16,
+        description: "The two given doodles' slots do not match.",
+    },
 });
 
 module.exports = ERRORS;

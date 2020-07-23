@@ -1,0 +1,82 @@
+{
+  "id": "4nnrcg9tm2ux3h55",
+  "latestChange": 1595454975681,
+  "initiated": 1595454947128,
+  "participantsCount": 2,
+  "inviteesCount": 0,
+  "type": "DATE",
+  "timeZone": true,
+  "preferencesType": "YESNO",
+  "state": "OPEN",
+  "locale": "en_GB",
+  "title": "Test_Interviewers",
+  "initiator": {
+    "name": "rui alves",
+    "notify": true,
+    "avatarLargeUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/83d2x8gdqhc713b8xnnkvhlew9rzn9fa",
+    "avatarSmallUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/h12mkif0q61h3wzozpwqshtx4jnfvjh8",
+    "timeZone": "Europe/Lisbon",
+    "userId": "vg0ig8pjxy0a7vhhogim5m866hmx25xd"
+  },
+  "options": [
+    {
+      "start": 1601456400000,
+      "end": 1601458200000,
+      "id": "c9780f98-db86-48c9-9ca1-8fefd675ebde",
+      "startDateTime": 1601456400000,
+      "endDateTime": 1601458200000,
+      "available": true
+    },
+    {
+      "start": 1601460000000,
+      "end": 1601461800000,
+      "id": "abbbcab8-f876-4030-8927-aa64427e13d6",
+      "startDateTime": 1601460000000,
+      "endDateTime": 1601461800000,
+      "available": true
+    },
+    {
+      "start": 1601463600000,
+      "end": 1601465400000,
+      "id": "4152a545-3d17-4e43-b611-1a9476f5cac4",
+      "startDateTime": 1601463600000,
+      "endDateTime": 1601465400000,
+      "available": true
+    },
+    {
+      "start": 1601467200000,
+      "end": 1601469000000,
+      "id": "77f494f6-e0c5-4a9e-995a-eab961b952f0",
+      "startDateTime": 1601467200000,
+      "endDateTime": 1601469000000,
+      "available": true
+    }
+  ],
+  "optionsHash": "7c81adab6a8a49867b870a20387a0490",
+  "participants": [
+    {
+      "id": 1729459786,
+      "name": "Interviewer A",
+      "preferences": [
+        1,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 1810429890,
+      "name": "Interviewer B",
+      "preferences": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "device": "WEB",
+  "calendarEvents": [],
+  "levels": "YESNO",
+  "isNewSchedulingExperience": false
+}

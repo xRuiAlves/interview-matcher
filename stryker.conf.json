@@ -17,7 +17,8 @@
   "mutate": [
     "src/**/*.js",
     "!src/printer.js",
-    "!src/main.js"
+    "!src/main.js",
+    "!src/apiFetcher.js"
   ],
   "transpilers": [],
   "coverageAnalysis": "off"

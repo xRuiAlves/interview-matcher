@@ -1,0 +1,92 @@
+{
+  "id": "yzsyqskhzr8n8umn",
+  "latestChange": 1595454767661,
+  "initiated": 1595454696628,
+  "participantsCount": 3,
+  "inviteesCount": 0,
+  "type": "DATE",
+  "timeZone": true,
+  "preferencesType": "YESNO",
+  "state": "OPEN",
+  "locale": "en_GB",
+  "title": "Test_Candidates",
+  "initiator": {
+    "name": "john doe",
+    "notify": true,
+    "avatarLargeUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/83d2x8gdqhc713b8xnnkvhlew9rzn9fa",
+    "avatarSmallUrl": "https://6a5edc300520d4037dd6-0732807511066685711db213ddc1d2df.ssl.cf2.rackcdn.com/h12mkif0q61h3wzozpwqshtx4jnfvjh8",
+    "timeZone": "Europe/Lisbon",
+    "userId": "vg0ig8pjxy0a7vhhogim5m866hmx25xd"
+  },
+  "options": [
+    {
+      "start": 1601456400000,
+      "end": 1601458200000,
+      "id": "a065cf42-3cb8-478b-8845-d3591bab157a",
+      "startDateTime": 1601456400000,
+      "endDateTime": 1601458200000,
+      "available": true
+    },
+    {
+      "start": 1601460000000,
+      "end": 1601461800000,
+      "id": "ebec7e66-770b-4b9b-b2af-2e8c41d3fbae",
+      "startDateTime": 1601460000000,
+      "endDateTime": 1601461800000,
+      "available": true
+    },
+    {
+      "start": 1601463600000,
+      "end": 1601465400000,
+      "id": "9988980d-167d-4b57-8163-7b947d8f33d5",
+      "startDateTime": 1601463600000,
+      "endDateTime": 1601465400000,
+      "available": true
+    },
+    {
+      "start": 1601467200000,
+      "end": 1601469000000,
+      "id": "ceac799a-f235-4a26-b88f-c917606b4797",
+      "startDateTime": 1601467200000,
+      "endDateTime": 1601469000000,
+      "available": true
+    }
+  ],
+  "optionsHash": "7c81adab6a8a49867b870a20387a0490",
+  "participants": [
+    {
+      "id": 1712034735,
+      "name": "Candidate A",
+      "preferences": [
+        1,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 841119036,
+      "name": "Candidate B",
+      "preferences": [
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 1977005371,
+      "name": "Candidate C",
+      "preferences": [
+        0,
+        1,
+        1,
+        0
+      ]
+    }
+  ],
+  "device": "WEB",
+  "calendarEvents": [],
+  "levels": "YESNO",
+  "isNewSchedulingExperience": false
+}
