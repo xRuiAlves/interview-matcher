@@ -63,6 +63,10 @@ const ERRORS = Object.freeze({
         code: 16,
         description: "The two given doodles' slots do not match.",
     },
+    INVALID_INPUT_TYPE: {
+        code: 17,
+        description: "Invalid input type.",
+    },
 });
 
 module.exports = ERRORS;

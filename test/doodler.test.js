@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
-const { convertDoodleData, verifyDoodleSlotsMatching, convertDoodlesData } = require("../src/doodler");
+const { convertDoodleData, verifyDoodleSlotsMatching, convertDoodlesData, convertToDoodleEntity, doodlifyOutput } = require("../src/doodler");
 const doodle_data = require("./fixtures/doodle/doodle_res.json");
 const doodle_data_candidates = require("./fixtures/doodle/doodle_res_candidates.json");
 const doodle_data_interviewers = require("./fixtures/doodle/doodle_res_interviewers.json");
+const undoodlified_output = require("./fixtures/doodle/undoodlified_output.json");
 
 describe("Convert doodle api data to interview-matcher data", () => {
     it("should extract all slots and participants", () => {
@@ -114,6 +115,47 @@ describe("Convert doodle candidates and interviewers to interview-matcher data f
                 participant.slots.forEach((slot) => {
                     expect(typeof slot).toBe("string");
                 });
+            });
+        });
+    });
+});
+
+describe("Convert internal entity to doodle entity", () => {
+    it("should convert internal entity to doodle entity", () => {
+        expect(() => {
+            convertToDoodleEntity("Candidate A");
+        }).toThrowError("Missing entity separator");
+
+        const doodle_entity1 = convertToDoodleEntity("Candidate A_1712034735");
+        expect(doodle_entity1.name).toBe("Candidate A");
+        expect(doodle_entity1.id).toBe("1712034735");
+
+        const doodle_entity2 = convertToDoodleEntity("Interviewer B_1810429890");
+        expect(doodle_entity2.name).toBe("Interviewer B");
+        expect(doodle_entity2.id).toBe("1810429890");
+    });
+});
+
+describe("Convert standard output format to doodle-like output format", () => {
+    it("should convert standard output format to doodle-like output format", () => {
+        const doodle_output = doodlifyOutput(undoodlified_output);
+        expect(Array.isArray(doodle_output)).toBe(true);
+        expect(doodle_output.length).toBe(3);
+
+        doodle_output.forEach((match) => {
+            expect(match.slot).toBeDefined();
+            expect(match.slot.start).toBeDefined();
+            expect(match.slot.end).toBeDefined();
+
+            expect(match.candidate).toBeDefined();
+            expect(match.candidate.name).toBeDefined();
+            expect(match.candidate.id).toBeDefined();
+
+            expect(match.interviewers).toBeDefined();
+            expect(Array.isArray(match.interviewers)).toBe(true);
+            match.interviewers.forEach((interviewer) => {
+                expect(interviewer.name).toBeDefined();
+                expect(interviewer.id).toBeDefined();
             });
         });
     });

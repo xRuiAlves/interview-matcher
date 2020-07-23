@@ -58,8 +58,30 @@ const convertDoodleData = (doodle_data) => {
 
 const verifyDoodleSlotsMatching = (doodle_data_1, doodle_data_2) => doodle_data_1.options.toString() === doodle_data_2.options.toString();
 
+const doodlifyOutput = (output) => output.map(({ slot, candidate, interviewers }) => {
+    const [start, end] = slot.split("-");
+    return {
+        slot: { start, end },
+        candidate: convertToDoodleEntity(candidate),
+        interviewers: interviewers.map(convertToDoodleEntity),
+    };
+});
+
+const convertToDoodleEntity = (entity) => {
+    const separator_index = entity.lastIndexOf("_");
+    if (separator_index === -1) {
+        throw new Error("Missing entity separator");
+    }
+    return {
+        name: entity.substr(0, separator_index),
+        id: entity.substr(separator_index + 1),
+    };
+};
+
 module.exports = {
     convertDoodlesData,
     convertDoodleData,
     verifyDoodleSlotsMatching,
+    doodlifyOutput,
+    convertToDoodleEntity,
 };
