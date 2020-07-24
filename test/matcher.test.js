@@ -486,7 +486,7 @@ describe("Build all matches from given flow results", () => {
         }
     });
 
-    it("should respect initial candidates and interviewers availability (extra large size)", () => {
+    it("should respect initial candidates and interviewers availability (extra large size, 2 interviewers per slot)", () => {
         const converted_data = convertDoodlesData(doodle_candidates_XL, doodle_interviewers_XL);
         const candidates_slots = mapIdToSlots(converted_data.candidates);
         const interviewers_slots = mapIdToSlots(converted_data.interviewers);
@@ -504,6 +504,43 @@ describe("Build all matches from given flow results", () => {
             expect(Object.values(output.interviews_per_interviewer).length).toBe(20);
             output.matches.forEach((match) => {
                 expect(match.interviewers.length).toBe(2);
+                expect(visited_slots.has(match.slot)).toBe(false);
+                expect(visited_candidates.has(match.candidate)).toBe(false);
+                visited_slots.add(match.slot);
+                visited_candidates.add(match.candidate);
+
+                expect(candidates_slots[match.candidate].has(match.slot));
+                expect(new Set([...match.interviewers]).size).toBe(match.interviewers.length);
+                match.interviewers.forEach((interviewer) => {
+                    --output.interviews_per_interviewer[interviewer];
+                    expect(interviewers_slots[interviewer].has(match.slot));
+                });
+            });
+
+            Object.values(output.interviews_per_interviewer).forEach((val) => {
+                expect(val).toBe(0);
+            });
+        }
+    });
+
+    it("should respect initial candidates and interviewers availability (extra large size, 3 interviewers per slot)", () => {
+        const converted_data = convertDoodlesData(doodle_candidates_XL, doodle_interviewers_XL);
+        const candidates_slots = mapIdToSlots(converted_data.candidates);
+        const interviewers_slots = mapIdToSlots(converted_data.interviewers);
+        expect(Object.entries(candidates_slots).length).toBe(50);
+        expect(Object.entries(interviewers_slots).length).toBe(20);
+
+        for (let i = 0; i < 5; ++i) {
+            const visited_slots = new Set();
+            const visited_candidates = new Set();
+            const output = match(converted_data.candidates, converted_data.interviewers, {
+                interviewers_per_slot: 3,
+                max_interviews_per_interviewer: 1e5,
+            });
+            expect(output.matches.length).toBe(50);
+            expect(Object.values(output.interviews_per_interviewer).length).toBe(20);
+            output.matches.forEach((match) => {
+                expect(match.interviewers.length).toBe(3);
                 expect(visited_slots.has(match.slot)).toBe(false);
                 expect(visited_candidates.has(match.candidate)).toBe(false);
                 visited_slots.add(match.slot);

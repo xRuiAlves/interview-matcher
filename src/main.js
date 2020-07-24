@@ -23,7 +23,7 @@ const main = async () => {
     const candidates_input = process.argv[3];
     const interviewers_input = process.argv[4];
     const output_file = process.argv[5];
-    const interviewers_per_slot = process.argv[6];
+    const interviewers_per_slot = process.argv[6] || 1;
     const max_interviews_per_interviewer = 1e5;
 
     if (isNaN(interviewers_per_slot) || interviewers_per_slot <= 0) {
