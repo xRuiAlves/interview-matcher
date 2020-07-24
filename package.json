@@ -1,6 +1,6 @@
 {
   "name": "interview-matcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interview slots matcher for candidates and interviewers",
   "repository": "github:xRuiAlves/interview-matcher",
   "main": "./src/main.js",
