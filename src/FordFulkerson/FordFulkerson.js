@@ -21,7 +21,7 @@ class FordFulkerson {
 
     calcMaxFlow() {
         while (true) {
-            const incremental_path = this.searchIncrementalPath();
+            const incremental_path = this.searchPathFromInterviewer();
             if (!incremental_path) {
                 break;
             }
@@ -35,11 +35,31 @@ class FordFulkerson {
         return this.flows;
     }
 
-    searchIncrementalPath() {
+    searchPathFromInterviewer() {
+        const interviewers = this.sortInterviewersByAscendingWork();
+
+        for (const interviewer of interviewers) {
+            const residual_val = this.capacities[this.source_node][interviewer] - this.flows[this.source_node][interviewer];
+            if (residual_val > 0) {
+                const incremental_path = this.searchIncrementalPath(interviewer);
+                if (incremental_path !== null) {
+                    incremental_path.unshift({
+                        from: this.source_node,
+                        to: incremental_path[0].from,
+                    });
+                    return incremental_path;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    searchIncrementalPath(starting_node_id = 0) {
         const visited = new Set();
         const to_visit = [];
 
-        to_visit.push(new SearchNode(this.source_node));
+        to_visit.push(new SearchNode(starting_node_id));
 
         while (!(to_visit.length === 0)) {
             const node = to_visit.shift();
@@ -51,7 +71,7 @@ class FordFulkerson {
             if (!visited.has(node.id)) {
                 visited.add(node.id);
 
-                if (node.id === 0) {
+                if (node.id === this.source_node) {
                     const interviewers = this.sortInterviewersByAscendingWork();
                     interviewers.forEach((interviewer) => {
                         const residual_val = this.capacities[node.id][interviewer] - this.flows[node.id][interviewer];

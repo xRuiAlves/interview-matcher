@@ -1,5 +1,6 @@
 const FordFulkerson = require("./FordFulkerson/FordFulkerson");
 const { hashEntity, dehashEntity } = require("./entities");
+const { shuffleArray } = require("./utils");
 
 const match = (candidates, interviewers, config) => {
     const slots = getSlots(candidates, interviewers);
@@ -9,7 +10,10 @@ const match = (candidates, interviewers, config) => {
 
     const flows = new FordFulkerson(capacities, graph_info).calcMaxFlow();
 
-    return buildMatchesFromFlows(flows, graph_nodes_map, graph_info, config);
+    const output = buildMatchesFromFlows(flows, graph_nodes_map, graph_info, config);
+    improveMatching(output.matches, output.interviews_per_interviewer, interviewers, candidates);
+
+    return output;
 };
 
 const getSlots = (candidates, interviewers) => {
@@ -192,6 +196,134 @@ const buildMatchesFromFlows = (flows, graph_nodes_map, graph_info, config) => {
     };
 };
 
+const improveMatching = (matches, interviews_per_interviewer, interviewers, candidates) => {
+    const NUM_IMPROVEMENTS_ITERATIONS = 20;
+    const taken_slots = new Set(matches.map((match) => match.slot));
+
+    const candidates_slots = mapIdToSlots(candidates);
+    const interviewers_slots = mapIdToSlots(interviewers);
+    const slots_interviewers = mapSlotsToIds(interviewers);
+
+    for (let i = 0; i < NUM_IMPROVEMENTS_ITERATIONS; ++i) {
+        let improvement = false;
+
+        const sorted_interviewers = Object.entries(interviews_per_interviewer)
+            .sort(([_name1, count1], [_name2, count2]) => count1 - count2)
+            .map(([name, _count]) => name);
+
+        sorted_interviewers.forEach((interviewer) => {
+            matches.forEach((match) => {
+                if (!match.interviewers.includes(interviewer)) {
+                    if (tryCandidateSlotSwap(
+                        interviewer, match, interviews_per_interviewer, taken_slots, candidates_slots, interviewers_slots, slots_interviewers,
+                    )) {
+                        improvement = true;
+                    }
+
+                    match.interviewers.forEach((other_interviewer) => {
+                        if (trySlotSwapBetweenInterviewers(interviewer, other_interviewer, match, interviews_per_interviewer, interviewers_slots)) {
+                            improvement = true;
+                        }
+                    });
+                }
+            });
+        });
+
+        if (!improvement) {
+            break;
+        }
+    }
+};
+
+const trySlotSwapBetweenInterviewers = (interviewerA, interviewerB, match, interviews_per_interviewer, interviewers_slots) => {
+    if (interviewerA !== interviewerB
+        && interviews_per_interviewer[interviewerA] < interviews_per_interviewer[interviewerB]
+        && !match.interviewers.includes(interviewerA)
+    ) {
+        if (canInterviewerAttendSlot(interviewerA, match.slot, interviewers_slots)) {
+            for (let i = 0; i < match.interviewers.length; ++i) {
+                if (match.interviewers[i] === interviewerB) {
+                    match.interviewers[i] = interviewerA;
+
+                    --interviews_per_interviewer[interviewerB];
+                    ++interviews_per_interviewer[interviewerA];
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return false;
+};
+
+const canInterviewerAttendSlot = (interviewer_id, slot, interviewers_slots) => interviewers_slots[interviewer_id].includes(slot);
+
+const tryCandidateSlotSwap = (interviewer, match, interviews_per_interviewer, taken_slots, candidates_slots, interviewers_slots, slots_interviewers) => {
+    const curr_interviewers_work = countInterviewersTotalWork(match.interviewers, interviews_per_interviewer);
+    const interviewers_per_slot = match.interviewers.length;
+
+    for (const slot of candidates_slots[match.candidate]) {
+        if (!taken_slots.has(slot)
+            && canInterviewerAttendSlot(interviewer, slot, interviewers_slots)
+            && slots_interviewers[slot].size > interviewers_per_slot
+        ) {
+            const valid_interviewers = new Set([...slots_interviewers[slot]]);
+            valid_interviewers.delete(interviewer);
+
+            const new_interviewers = [interviewer].concat(shuffleArray([...valid_interviewers])).slice(0, interviewers_per_slot);
+            const new_interviewers_work = countInterviewersTotalWork(new_interviewers, interviews_per_interviewer);
+
+            if (new_interviewers_work + interviewers_per_slot < curr_interviewers_work) {
+                taken_slots.delete(match.slot);
+                taken_slots.add(slot);
+                match.slot = slot;
+
+                match.interviewers.forEach((old_interviewer) => {
+                    --interviews_per_interviewer[old_interviewer];
+                });
+                new_interviewers.forEach((new_interviewer) => {
+                    ++interviews_per_interviewer[new_interviewer];
+                });
+                match.interviewers = new_interviewers;
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
+
+const countInterviewersTotalWork = (interviewers, interviews_per_interviewer) => (
+    interviewers.reduce((work, interviewer) => work + interviews_per_interviewer[interviewer], 0)
+);
+
+const mapIdToSlots = (participants) => {
+    const participants_slots = {};
+    participants.forEach((participant) => {
+        participants_slots[participant.id] = participant.slots;
+    });
+    return participants_slots;
+};
+
+const mapSlotsToIds = (participants) => {
+    const slots_participants = {};
+    participants.forEach((participant) => {
+        participant.slots.forEach((slot) => {
+            if (!slots_participants[slot]) {
+                slots_participants[slot] = new Set();
+            }
+            slots_participants[slot].add(participant.id);
+        });
+    });
+    return slots_participants;
+};
+
 module.exports = {
     match,
     getSlots,
@@ -199,4 +331,8 @@ module.exports = {
     populateCapacitiesGraph,
     pruneCapacitiesGraph,
     buildMatchesFromFlows,
+    canInterviewerAttendSlot,
+    countInterviewersTotalWork,
+    mapIdToSlots,
+    mapSlotsToIds,
 };

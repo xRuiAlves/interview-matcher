@@ -66,7 +66,10 @@ const doodlifyOutput = ({ matches, interviews_per_interviewer }) => {
 
     return {
         matches: matches.map(({ slot, candidate, interviewers }) => {
-            const [start, end] = slot.split("-");
+            const [raw_start, raw_end] = slot.split("-");
+            const start = convertDoodleDate(raw_start);
+            const end = convertDoodleDate(raw_end);
+
             return {
                 slot: { start, end },
                 candidate: convertToDoodleEntity(candidate),
@@ -86,6 +89,12 @@ const convertToDoodleEntity = (entity) => {
         name: entity.substr(0, separator_index),
         id: entity.substr(separator_index + 1),
     };
+};
+
+const convertDoodleDate = (doodle_date) => {
+    const d = new Date(0);
+    d.setUTCSeconds(doodle_date.substr(0, 10));
+    return d.toUTCString();
 };
 
 module.exports = {

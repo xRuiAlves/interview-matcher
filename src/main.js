@@ -7,7 +7,7 @@ const ERRORS = require("./errors");
 const INPUT_TYPE_FLAGS = require("./inputTypeFlags");
 
 const main = async () => {
-    if (process.argv.length < 7) {
+    if (process.argv.length < 6) {
         printUsage();
         throw { err: ERRORS.ARGS };
     }
@@ -24,14 +24,10 @@ const main = async () => {
     const interviewers_input = process.argv[4];
     const output_file = process.argv[5];
     const interviewers_per_slot = process.argv[6];
-    const max_interviews_per_interviewer = process.argv[7] || 1e5;
+    const max_interviews_per_interviewer = 1e5;
 
     if (isNaN(interviewers_per_slot) || interviewers_per_slot <= 0) {
         throw { err: ERRORS.INVALID_INTERVIEWERS_PER_SLOT };
-    }
-
-    if (isNaN(max_interviews_per_interviewer) || max_interviews_per_interviewer <= 0) {
-        throw { err: ERRORS.INVALID_MAX_INTERVIEWS_PER_INTERVIEWER };
     }
 
     let candidates, interviewers;

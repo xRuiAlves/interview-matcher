@@ -1,6 +1,6 @@
 [
     {
-        "id": "Inteviewer A",
+        "id": "Interviewer A",
         "slots": [
             "slot 1",
             "slot 2",
@@ -8,7 +8,7 @@
         ]
     },
     {
-        "id": "Inteviewer B",
+        "id": "Interviewer B",
         "slots": [
             "slot 4",
             "slot 5",
@@ -16,7 +16,7 @@
         ]
     },
     {
-        "id": "Inteviewer C",
+        "id": "Interviewer C",
         "slots": [
             "slot 7",
             "slot 8",

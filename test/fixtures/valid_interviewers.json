@@ -1,20 +1,20 @@
 [
     {
-        "id": "Inteviewer A",
+        "id": "Interviewer A",
         "slots": [
             "slot 3",
             "slot 4"
         ]
     },
     {
-        "id": "Inteviewer B",
+        "id": "Interviewer B",
         "slots": [
             "slot 1",
             "slot 2"
         ]
     },
     {
-        "id": "Inteviewer C",
+        "id": "Interviewer C",
         "slots": [
             "slot 5",
             "slot 1"

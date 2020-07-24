@@ -1,4 +1,8 @@
-const { match, getSlots, buildCapacitiesGraph, populateCapacitiesGraph, pruneCapacitiesGraph } = require("../src/matcher");
+const {
+    match, getSlots, buildCapacitiesGraph, populateCapacitiesGraph, pruneCapacitiesGraph,
+    canInterviewerAttendSlot, countInterviewersTotalWork, mapIdToSlots, mapSlotsToIds,
+} = require("../src/matcher");
+const { convertDoodlesData } = require("../src/doodler");
 const { hashEntity } = require("../src/entities");
 const candidates = require("./fixtures/valid_candidates.json");
 const interviewers = require("./fixtures/valid_interviewers.json");
@@ -6,6 +10,8 @@ const candidates2 = require("./fixtures/valid_candidates_2.json");
 const interviewers2 = require("./fixtures/valid_interviewers_2.json");
 const candidates3 = require("./fixtures/valid_candidates_3.json");
 const interviewers3 = require("./fixtures/valid_interviewers_3.json");
+const doodle_candidates = require("./fixtures/doodle/doodle_res_large_candidates.json");
+const doodle_interviewers = require("./fixtures/doodle/doodle_res_large_interviewers.json");
 
 describe("Extract all existing slots", () => {
     it("should get all slots from candidates/interviewers options", () => {
@@ -390,5 +396,127 @@ describe("Build all matches from given flow results", () => {
             visited_candidates.add(match.candidate);
         });
         expect(Object.values(output5.interviews_per_interviewer).length).toBe(interviewers.length);
+    });
+
+    it("should respect initial candidates and interviewers availability", () => {
+        const converted_data = convertDoodlesData(doodle_candidates, doodle_interviewers);
+        const candidates_slots = mapIdToSlots(converted_data.candidates);
+        const interviewers_slots = mapIdToSlots(converted_data.interviewers);
+
+        for (let i = 0; i < 10; ++i) {
+            const visited_slots = new Set();
+            const visited_candidates = new Set();
+            const output = match(converted_data.candidates, converted_data.interviewers, {
+                interviewers_per_slot: 2,
+                max_interviews_per_interviewer: 1e5,
+            });
+            expect(output.matches.length).toBe(10);
+            expect(Object.values(output.interviews_per_interviewer).length).toBe(10);
+            output.matches.forEach((match) => {
+                expect(match.interviewers.length).toBe(2);
+                expect(visited_slots.has(match.slot)).toBe(false);
+                expect(visited_candidates.has(match.candidate)).toBe(false);
+                visited_slots.add(match.slot);
+                visited_candidates.add(match.candidate);
+
+                expect(candidates_slots[match.candidate].includes(match.slot));
+                expect(new Set([...match.interviewers]).size).toBe(match.interviewers.length);
+                match.interviewers.forEach((interviewer) => {
+                    --output.interviews_per_interviewer[interviewer];
+                    expect(interviewers_slots[interviewer].includes(match.slot));
+                });
+            });
+
+            Object.values(output.interviews_per_interviewer).forEach((val) => {
+                expect(val).toBe(0);
+            });
+        }
+    });
+});
+
+describe("Verify if interviewer can attend slot", () => {
+    const interviewers_slots = {};
+    interviewers.forEach((interviewer) => {
+        interviewers_slots[interviewer.id] = interviewer.slots;
+    });
+
+    it("should return true if interviewer can attend slot", () => {
+        ["slot 3", "slot 4"].forEach((slot) => {
+            expect(canInterviewerAttendSlot("Interviewer A", slot, interviewers_slots)).toBe(true);
+        });
+
+        ["slot 1", "slot 2"].forEach((slot) => {
+            expect(canInterviewerAttendSlot("Interviewer B", slot, interviewers_slots)).toBe(true);
+        });
+
+        ["slot 1", "slot 5"].forEach((slot) => {
+            expect(canInterviewerAttendSlot("Interviewer C", slot, interviewers_slots)).toBe(true);
+        });
+    });
+
+    it("should return false if interviewer can't attend slot", () => {
+        ["slot 1", "slot 2", "slot 5"].forEach((slot) => {
+            expect(canInterviewerAttendSlot("Interviewer A", slot, interviewers_slots)).toBe(false);
+        });
+
+        ["slot 3", "slot 4", "slot 5"].forEach((slot) => {
+            expect(canInterviewerAttendSlot("Interviewer B", slot, interviewers_slots)).toBe(false);
+        });
+
+        ["slot 2", "slot 3", "slot 4"].forEach((slot) => {
+            expect(canInterviewerAttendSlot("Interviewer C", slot, interviewers_slots)).toBe(false);
+        });
+    });
+});
+
+describe("Count total interviewers work in a match", () => {
+    it("should return the correct toal work count", () => {
+        const interviews_per_interviewer = {
+            "A": 1,
+            "B": 3,
+            "C": 5,
+            "D": 11,
+        };
+
+        expect(countInterviewersTotalWork(["A", "B"], interviews_per_interviewer)).toBe(4);
+        expect(countInterviewersTotalWork(["A", "C"], interviews_per_interviewer)).toBe(6);
+        expect(countInterviewersTotalWork(["A", "D"], interviews_per_interviewer)).toBe(12);
+        expect(countInterviewersTotalWork(["B", "C"], interviews_per_interviewer)).toBe(8);
+        expect(countInterviewersTotalWork(["B", "D"], interviews_per_interviewer)).toBe(14);
+        expect(countInterviewersTotalWork(["C", "D"], interviews_per_interviewer)).toBe(16);
+    });
+});
+
+describe("Convert participants list to map from participant id to participant slots", () => {
+    it("should map participants ids to slots", () => {
+        const participants_groups = [candidates, interviewers];
+
+        participants_groups.forEach((participants) => {
+            const participants_slots = mapIdToSlots(participants);
+
+            participants.forEach((participant) => {
+                expect(participants_slots[participant.id]).toBeDefined();
+                expect(Array.isArray(participants_slots[participant.id])).toBe(true);
+                expect(participants_slots[participant.id].toString()).toBe(participant.slots.toString());
+            });
+        });
+    });
+});
+
+describe("Convert participants list to map from slot to its participants", () => {
+    it("should map slots to participants", () => {
+        const participants_groups = [candidates, interviewers];
+
+        participants_groups.forEach((participants) => {
+            const slots_participants = mapSlotsToIds(participants);
+
+            participants.forEach((participant) => {
+                participant.slots.forEach((slot) => {
+                    expect(slots_participants[slot]).toBeDefined();
+                    expect(slots_participants[slot] instanceof Set).toBe(true);
+                    expect(slots_participants[slot].has(participant.id)).toBe(true);
+                });
+            });
+        });
     });
 });

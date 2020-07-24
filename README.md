@@ -15,7 +15,7 @@ npm i
 To run the app, use `npm start`:
 
 ```
-npm start <input_type> <candidates> <interviewers> <output_file> <interviewers_per_slot> [<max_interviews_per_interviewer>]
+npm start <input_type> <candidates> <interviewers> <output_file> <interviewers_per_slot>
 ```
 
 - `input_type`: candidate and interviewer options input data type (may be a JSON file, format detailed below or a Doodle poll)
@@ -25,7 +25,6 @@ npm start <input_type> <candidates> <interviewers> <output_file> <interviewers_p
 - `interviewers`: interviewers options
 - `output_file`: output file name
 - `interviewers_per_slot`: required number of interviewers per slot
-- `max_interviews_per_interviewer`, *optional*: maximum number of interviews that a interviewer may be assigned to
 
 ### JSON input files format
 
