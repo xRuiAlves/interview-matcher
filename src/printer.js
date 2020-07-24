@@ -1,3 +1,8 @@
+/**
+ * Print error to stderr
+ * @param {Object} err
+ * @param {String} msg
+ */
 const printError = (err, msg) => {
     console.error(`Code: ${err.code}`);
     console.error(`Reason: ${err.description}`);
@@ -6,6 +11,9 @@ const printError = (err, msg) => {
     }
 };
 
+/**
+ * Print tool usage to stdout
+ */
 const printUsage = () => {
     console.info("usage: interview-matcher <input_type> <candidates> <interviewers> <output_file> <interviewers_per_slot>");
     console.info("\tinput_type: candidate and interviewer options input data type:");

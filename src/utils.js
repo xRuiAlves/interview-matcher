@@ -1,3 +1,8 @@
+/**
+ * Shuffle an array
+ * @param {Array} arr
+ * @returns {Array} shuffled array
+ */
 const shuffleArray = (arr) => {
     const shuffled_arr = [...arr];
 

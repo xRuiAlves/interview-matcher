@@ -1,3 +1,6 @@
+/**
+ * Error types
+ */
 const ERRORS = Object.freeze({
     ARGS: {
         code: 1,

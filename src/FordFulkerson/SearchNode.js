@@ -1,4 +1,13 @@
+/**
+ * Search node for graph search algorithms
+ */
 class SearchNode {
+    /**
+     * SearchNode constructor
+     * @param {Integer} id
+     * @param {SearchNode} prev
+     * @throws {Error}
+     */
     constructor(id, prev = null) {
         if (isNaN(id) && !id) {
             throw new Error("Missing node 'id'");

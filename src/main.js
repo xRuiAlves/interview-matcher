@@ -31,6 +31,7 @@ const main = async () => {
     }
 
     let candidates, interviewers;
+
     if (input_type === INPUT_TYPE_FLAGS.JSON) {
         console.info("Reading candidates JSON file ...");
         candidates = readInputFile(candidates_input);

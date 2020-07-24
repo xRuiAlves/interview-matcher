@@ -1,6 +1,12 @@
 const fs = require("fs");
 const ERRORS = require("./errors");
 
+/**
+ * Read JSON file content
+ * @param {String} file_name
+ * @throws {Object}
+ * @returns {Object} JSON file data
+ */
 const readInputFile = (file_name) => {
     let data;
 
@@ -16,6 +22,13 @@ const readInputFile = (file_name) => {
     return data;
 };
 
+/**
+ * Validate input JSON file
+ * @param {Object} data
+ * @param {String} file_name
+ * @throws {Object}
+ * @return {Boolean} True if valid, false otherwise
+ */
 const validateFileData = (data, file_name) => {
     if (!Array.isArray(data)) {
         throw {
@@ -78,6 +91,11 @@ const validateFileData = (data, file_name) => {
     return true;
 };
 
+/**
+ * Writes JSON object ot file
+ * @param {Object} data
+ * @param {String} file_name
+ */
 const writeJSONtoFile = (data, file_name) => {
     const data_json = JSON.stringify(data, null, 4);
     fs.writeFileSync(file_name, data_json);

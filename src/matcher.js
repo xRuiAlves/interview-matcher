@@ -2,6 +2,13 @@ const FordFulkerson = require("./FordFulkerson/FordFulkerson");
 const { hashEntity, dehashEntity } = require("./entities");
 const { shuffleArray } = require("./utils");
 
+/**
+ * Get interviews matches based on candidates and interviewers availibity
+ * @param {Array} candidates
+ * @param {Array} interviewers
+ * @param {Object} config
+ * @returns {Object} Interview Matches
+ */
 const match = (candidates, interviewers, config) => {
     const slots = getSlots(candidates, interviewers);
     const { capacities, graph_nodes_map, graph_info } = buildCapacitiesGraph(candidates, interviewers, slots);
@@ -16,6 +23,12 @@ const match = (candidates, interviewers, config) => {
     return output;
 };
 
+/**
+ * Get existent slots in candidates and interviewers availability
+ * @param {Array} candidates
+ * @param {Array} interviewers
+ * @returns {Array} Existent slots
+ */
 const getSlots = (candidates, interviewers) => {
     const entry_groups = [candidates, interviewers];
     const slots = new Set();
@@ -29,6 +42,13 @@ const getSlots = (candidates, interviewers) => {
     return [...slots].sort();
 };
 
+/**
+ * Build capacities matrix schema with given candidates and interviewers' availability
+ * @param {Array} candidates
+ * @param {Array} interviewers
+ * @param {Array} slots
+ * @returns {Matrix} Capacities matrix
+ */
 const buildCapacitiesGraph = (candidates, interviewers, slots) => {
     const graph_nodes_map = {};
     const graph_info = {
@@ -87,6 +107,15 @@ const buildCapacitiesGraph = (candidates, interviewers, slots) => {
     };
 };
 
+/**
+ * Populate capacities matrix with given candidates and interviewers' availability
+ * @param {Array} candidates
+ * @param {Array} interviewers
+ * @param {Array} slots
+ * @param {Matrix} capacities
+ * @param {Object} graph_nodes_map
+ * @param {Object} config
+ */
 const populateCapacitiesGraph = (candidates, interviewers, slots, capacities, graph_nodes_map, config) => {
     // source to interviewers
     interviewers.forEach((interviewer) => {
@@ -119,6 +148,13 @@ const populateCapacitiesGraph = (candidates, interviewers, slots, capacities, gr
     });
 };
 
+/**
+ * Prune unfeasible slots (due to insufficient interviewer availability) from capacities matrix
+ * @param {Array} interviewers
+ * @param {Matrix} capacities
+ * @param {Object} graph_nodes_map
+ * @param {Object} config
+ */
 const pruneCapacitiesGraph = (interviewers, capacities, graph_nodes_map, config) => {
     // remove edges to slots that can't have enough interviewers
     const num_interviewers_per_slot = {};
@@ -143,6 +179,14 @@ const pruneCapacitiesGraph = (interviewers, capacities, graph_nodes_map, config)
     }
 };
 
+/**
+ * Build interview matches from flow matrix
+ * @param {Matrix} flows
+ * @param {Object} graph_nodes_map
+ * @param {Object} graph_info
+ * @param {Object} config
+ * @returns {Array} Interview matches
+ */
 const buildMatchesFromFlows = (flows, graph_nodes_map, graph_info, config) => {
     const sink_node = flows.length - 1;
 
@@ -196,6 +240,13 @@ const buildMatchesFromFlows = (flows, graph_nodes_map, graph_info, config) => {
     };
 };
 
+/**
+ * Iteratively improve interviews matching, if possible
+ * @param {Array} matches
+ * @param {Object} interviews_per_interviewer
+ * @param {Array} interviewers
+ * @param {Array} candidates
+ */
 const improveMatching = (matches, interviews_per_interviewer, interviewers, candidates) => {
     const NUM_IMPROVEMENTS_ITERATIONS = 20;
     const taken_slots = new Set(matches.map((match) => match.slot));
@@ -235,6 +286,15 @@ const improveMatching = (matches, interviews_per_interviewer, interviewers, cand
     }
 };
 
+/**
+ * Swap interviewer assigned two a slot in order to improve interviewers allocation, if possible
+ * @param {Integer} interviewerA
+ * @param {Integer} interviewerB
+ * @param {Object} match
+ * @param {Object} interviews_per_interviewer
+ * @param {Object} interviewers_slots
+ * @returns {Boolean} True if swap occured, false otherwise
+ */
 const trySlotSwapBetweenInterviewers = (interviewerA, interviewerB, match, interviews_per_interviewer, interviewers_slots) => {
     if (interviewerA !== interviewerB
         && interviews_per_interviewer[interviewerA] < interviews_per_interviewer[interviewerB]
@@ -261,8 +321,26 @@ const trySlotSwapBetweenInterviewers = (interviewerA, interviewerB, match, inter
     return false;
 };
 
+/**
+ * Verifies if an interviewer has availability for a given slot
+ * @param {Integer} interviewer_id
+ * @param {Integer} slot
+ * @param {Object} interviewers_slots
+ * @returns {Boolean} True if interviewer can attend slot, false otherwise
+ */
 const canInterviewerAttendSlot = (interviewer_id, slot, interviewers_slots) => interviewers_slots[interviewer_id].has(slot);
 
+/**
+ * Swap slot a candidate is assigned to in order to improve interviewers allocation, if possible
+ * @param {Integer} interviewer
+ * @param {Object} match
+ * @param {Object} interviews_per_interviewer
+ * @param {Set} taken_slots
+ * @param {Object} candidates_slots
+ * @param {Object} interviewers_slots
+ * @param {Object} slots_interviewers
+ * @returns {Boolean} True if swap occured, false otherwise
+ */
 const tryCandidateSlotSwap = (interviewer, match, interviews_per_interviewer, taken_slots, candidates_slots, interviewers_slots, slots_interviewers) => {
     const curr_interviewers_work = countInterviewersTotalWork(match.interviewers, interviews_per_interviewer);
     const interviewers_per_slot = match.interviewers.length;
@@ -299,10 +377,21 @@ const tryCandidateSlotSwap = (interviewer, match, interviews_per_interviewer, ta
     return false;
 };
 
+/**
+ * Count the total number of slots a group of interviewers is assigned to
+ * @param {Array} interviewers
+ * @param {Object} interviews_per_interviewer
+ * @returns {Integer} Total number of slots the group of interviewers is assigned to
+ */
 const countInterviewersTotalWork = (interviewers, interviews_per_interviewer) => (
     interviewers.reduce((work, interviewer) => work + interviews_per_interviewer[interviewer], 0)
 );
 
+/**
+ * Map participant id to all slots they have availability for
+ * @param {Array} participants
+ * @returns {Object} Partipant id to participant slots map
+ */
 const mapIdToSlots = (participants) => {
     const participants_slots = {};
     participants.forEach((participant) => {
@@ -311,6 +400,11 @@ const mapIdToSlots = (participants) => {
     return participants_slots;
 };
 
+/**
+ * Map slots to participants which have availability for that slot
+ * @param {Array} participants
+ * @returns {Object} Slots to participants map
+ */
 const mapSlotsToIds = (participants) => {
     const slots_participants = {};
     participants.forEach((participant) => {

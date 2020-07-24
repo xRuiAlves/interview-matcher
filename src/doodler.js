@@ -1,5 +1,12 @@
 const ERRORS = require("./errors");
 
+/**
+ * Convert candidate and interviewers' doodle polls input data to inverview matcher internal data
+ * @param {Object} candidates_doodle
+ * @param {Object} interviewers_doodle
+ * @throws {Object}
+ * @returns {Object} Doodle polls' candaidates and interviewers arrays
+ */
 const convertDoodlesData = (candidates_doodle, interviewers_doodle) => {
     if (!verifyDoodleSlotsMatching(candidates_doodle, interviewers_doodle)) {
         throw { err: ERRORS.UNMATCHING_DOODLES };
@@ -11,6 +18,12 @@ const convertDoodlesData = (candidates_doodle, interviewers_doodle) => {
     };
 };
 
+/**
+ * Convert a doodle poll input data to inverview matcher internal data
+ * @param {String} doodle_data
+ * @throws {Object}
+ * @returns {Object} Doodle poll's participants array
+ */
 const convertDoodleData = (doodle_data) => {
     if (!doodle_data.options) {
         throw {
@@ -56,6 +69,12 @@ const convertDoodleData = (doodle_data) => {
     };
 };
 
+/**
+ * Verify if two doodle polls slot options match
+ * @param {Object} doodle_data_1
+ * @param {Object} doodle_data_2
+ * @returns {Boolean} True if doodle match, false otherwise
+ */
 const verifyDoodleSlotsMatching = (doodle_data_1, doodle_data_2) => doodle_data_1.options.toString() === doodle_data_2.options.toString();
 
 const doodlifyOutput = ({ matches, interviews_per_interviewer }) => {
@@ -80,6 +99,12 @@ const doodlifyOutput = ({ matches, interviews_per_interviewer }) => {
     };
 };
 
+/**
+ * Convert an internal entity to doodle-like format
+ * @param {Object} entity
+ * @throws {Error}
+ * @returns {Object} Doodle-like formatted entity
+ */
 const convertToDoodleEntity = (entity) => {
     const separator_index = entity.lastIndexOf("_");
     if (separator_index === -1) {
@@ -91,6 +116,11 @@ const convertToDoodleEntity = (entity) => {
     };
 };
 
+/**
+ * Convert doodle poll date to valid UTC date
+ * @param {String} doodle_date
+ * @returns {String} UTC date
+ */
 const convertDoodleDate = (doodle_date) => {
     const d = new Date(0);
     d.setUTCSeconds(doodle_date.substr(0, 10));

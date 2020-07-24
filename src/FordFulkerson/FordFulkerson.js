@@ -1,7 +1,16 @@
 /* eslint-disable no-constant-condition */
 const SearchNode = require("./SearchNode");
 
+/**
+ * Ford Fulkerson network max-flow algorithm for interview matching
+ */
 class FordFulkerson {
+    /**
+     * FordFulkerson constructor
+     * @param {Matrix} capacities
+     * @param {Object} graph_info
+     * @throws {Error}
+     */
     constructor(capacities, graph_info) {
         if (!capacities) {
             throw new Error("Missing field 'capacities'");
@@ -19,6 +28,10 @@ class FordFulkerson {
         this.sink_node = capacities.length - 1;
     }
 
+    /**
+     * Compute maximum flow in interview matching graph
+     * @returns {Matrix} Interview matches flow matrix
+     */
     calcMaxFlow() {
         while (true) {
             const incremental_path = this.searchPathFromInterviewer();
@@ -35,6 +48,10 @@ class FordFulkerson {
         return this.flows;
     }
 
+    /**
+     * Search graph incremental path starting in interviewer node
+     * @returns {Array} Incremental path if existent, null otherwise
+     */
     searchPathFromInterviewer() {
         const interviewers = this.sortInterviewersByAscendingWork();
 
@@ -55,6 +72,11 @@ class FordFulkerson {
         return null;
     }
 
+    /**
+     * Search graph incremental path
+     * @param {Integer} starting_node_id Defaults to 0
+     * @returns {Array} Incremental path if existent, null otherwise
+     */
     searchIncrementalPath(starting_node_id = 0) {
         const visited = new Set();
         const to_visit = [];
@@ -125,6 +147,10 @@ class FordFulkerson {
         return null;
     }
 
+    /**
+     * Sort interviewers by ascending number of currently assigned interview slots
+     * @returns {Array} Interviewer node ids sorted by ascending number of assigned interview slots
+     */
     sortInterviewersByAscendingWork() {
         const interviewers_work_count = {};
         this.graph_info.interviewers.forEach((interviewer) => {
@@ -138,6 +164,10 @@ class FordFulkerson {
             .map(([id, _count]) => parseInt(id, 10));
     }
 
+    /**
+     * Sort slots by descending number of currently assigned interviewers
+     * @returns {Array} Slot node ids sorted by descending number of assigned interviewers
+     */
     sortSlotsByDescendingNumInterviewers() {
         const slots_interviewers_count = {};
         this.graph_info.slot_filters.forEach((slot) => {
@@ -154,6 +184,11 @@ class FordFulkerson {
             .map(([id, _count]) => parseInt(id, 10));
     }
 
+
+    /**
+     * Sort candidates by ascending number of currently assigned slots (either has 1 slot assigned or none)
+     * @returns {Array} Candidate node ids sorted by ascending number of assigned slots
+     */
     sortCandidatesByAscendingAssignedSlots() {
         const candidates = [];
         this.graph_info.candidates.forEach((candidate) => {
@@ -167,6 +202,11 @@ class FordFulkerson {
         return candidates;
     }
 
+    /**
+     * Build an incremental path
+     * @param {SearchNode} path_end
+     * @returns {Array} Incremental path
+     */
     static buildIncrementalPath(path_end) {
         let current_node = path_end;
         const path = [];
