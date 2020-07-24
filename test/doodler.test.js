@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 const { convertDoodleData, verifyDoodleSlotsMatching, convertDoodlesData, convertToDoodleEntity, doodlifyOutput } = require("../src/doodler");
 const doodle_data = require("./fixtures/doodle/doodle_res.json");
-const doodle_data_candidates = require("./fixtures/doodle/doodle_res_candidates.json");
-const doodle_data_interviewers = require("./fixtures/doodle/doodle_res_interviewers.json");
+const doodle_data_candidates = require("./fixtures/doodle/doodle_res_candidates_S.json");
+const doodle_data_interviewers = require("./fixtures/doodle/doodle_res_interviewers_S.json");
 const undoodlified_output = require("./fixtures/doodle/undoodlified_output.json");
 
 describe("Convert doodle api data to interview-matcher data", () => {

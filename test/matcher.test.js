@@ -1,6 +1,7 @@
 const {
     match, getSlots, buildCapacitiesGraph, populateCapacitiesGraph, pruneCapacitiesGraph,
     canInterviewerAttendSlot, countInterviewersTotalWork, mapIdToSlots, mapSlotsToIds,
+    improveMatching, trySlotSwapBetweenInterviewers, tryCandidateSlotSwap,
 } = require("../src/matcher");
 const { convertDoodlesData } = require("../src/doodler");
 const { hashEntity } = require("../src/entities");
@@ -10,8 +11,21 @@ const candidates2 = require("./fixtures/valid_candidates_2.json");
 const interviewers2 = require("./fixtures/valid_interviewers_2.json");
 const candidates3 = require("./fixtures/valid_candidates_3.json");
 const interviewers3 = require("./fixtures/valid_interviewers_3.json");
-const doodle_candidates = require("./fixtures/doodle/doodle_res_large_candidates.json");
-const doodle_interviewers = require("./fixtures/doodle/doodle_res_large_interviewers.json");
+const candidates4 = require("./fixtures/valid_candidates_4.json");
+const interviewers4 = require("./fixtures/valid_interviewers_4.json");
+const candidates5 = require("./fixtures/valid_candidates_5.json");
+const interviewers5 = require("./fixtures/valid_interviewers_5.json");
+const candidates6 = require("./fixtures/valid_candidates_6.json");
+const interviewers6 = require("./fixtures/valid_interviewers_6.json");
+const candidates7 = require("./fixtures/valid_candidates_7.json");
+const interviewers7 = require("./fixtures/valid_interviewers_7.json");
+const doodle_candidates_M = require("./fixtures/doodle/doodle_res_candidates_M.json");
+const doodle_interviewers_M = require("./fixtures/doodle/doodle_res_interviewers_M.json");
+const doodle_candidates_L = require("./fixtures/doodle/doodle_res_candidates_L.json");
+const doodle_interviewers_L = require("./fixtures/doodle/doodle_res_interviewers_L.json");
+const doodle_candidates_XL = require("./fixtures/doodle/doodle_res_candidates_XL.json");
+const doodle_interviewers_XL = require("./fixtures/doodle/doodle_res_interviewers_XL.json");
+
 
 describe("Extract all existing slots", () => {
     it("should get all slots from candidates/interviewers options", () => {
@@ -398,12 +412,14 @@ describe("Build all matches from given flow results", () => {
         expect(Object.values(output5.interviews_per_interviewer).length).toBe(interviewers.length);
     });
 
-    it("should respect initial candidates and interviewers availability", () => {
-        const converted_data = convertDoodlesData(doodle_candidates, doodle_interviewers);
+    it("should respect initial candidates and interviewers availability (medium size)", () => {
+        const converted_data = convertDoodlesData(doodle_candidates_M, doodle_interviewers_M);
         const candidates_slots = mapIdToSlots(converted_data.candidates);
         const interviewers_slots = mapIdToSlots(converted_data.interviewers);
+        expect(Object.entries(candidates_slots).length).toBe(10);
+        expect(Object.entries(interviewers_slots).length).toBe(10);
 
-        for (let i = 0; i < 10; ++i) {
+        for (let i = 0; i < 5; ++i) {
             const visited_slots = new Set();
             const visited_candidates = new Set();
             const output = match(converted_data.candidates, converted_data.interviewers, {
@@ -419,11 +435,85 @@ describe("Build all matches from given flow results", () => {
                 visited_slots.add(match.slot);
                 visited_candidates.add(match.candidate);
 
-                expect(candidates_slots[match.candidate].includes(match.slot));
+                expect(candidates_slots[match.candidate].has(match.slot));
                 expect(new Set([...match.interviewers]).size).toBe(match.interviewers.length);
                 match.interviewers.forEach((interviewer) => {
                     --output.interviews_per_interviewer[interviewer];
-                    expect(interviewers_slots[interviewer].includes(match.slot));
+                    expect(interviewers_slots[interviewer].has(match.slot));
+                });
+            });
+
+            Object.values(output.interviews_per_interviewer).forEach((val) => {
+                expect(val).toBe(0);
+            });
+        }
+    });
+
+    it("should respect initial candidates and interviewers availability (large size)", () => {
+        const converted_data = convertDoodlesData(doodle_candidates_L, doodle_interviewers_L);
+        const candidates_slots = mapIdToSlots(converted_data.candidates);
+        const interviewers_slots = mapIdToSlots(converted_data.interviewers);
+        expect(Object.entries(candidates_slots).length).toBe(30);
+        expect(Object.entries(interviewers_slots).length).toBe(10);
+
+        for (let i = 0; i < 5; ++i) {
+            const visited_slots = new Set();
+            const visited_candidates = new Set();
+            const output = match(converted_data.candidates, converted_data.interviewers, {
+                interviewers_per_slot: 2,
+                max_interviews_per_interviewer: 1e5,
+            });
+            expect(output.matches.length).toBe(30);
+            expect(Object.values(output.interviews_per_interviewer).length).toBe(10);
+            output.matches.forEach((match) => {
+                expect(match.interviewers.length).toBe(2);
+                expect(visited_slots.has(match.slot)).toBe(false);
+                expect(visited_candidates.has(match.candidate)).toBe(false);
+                visited_slots.add(match.slot);
+                visited_candidates.add(match.candidate);
+
+                expect(candidates_slots[match.candidate].has(match.slot));
+                expect(new Set([...match.interviewers]).size).toBe(match.interviewers.length);
+                match.interviewers.forEach((interviewer) => {
+                    --output.interviews_per_interviewer[interviewer];
+                    expect(interviewers_slots[interviewer].has(match.slot));
+                });
+            });
+
+            Object.values(output.interviews_per_interviewer).forEach((val) => {
+                expect(val).toBe(0);
+            });
+        }
+    });
+
+    it("should respect initial candidates and interviewers availability (extra large size)", () => {
+        const converted_data = convertDoodlesData(doodle_candidates_XL, doodle_interviewers_XL);
+        const candidates_slots = mapIdToSlots(converted_data.candidates);
+        const interviewers_slots = mapIdToSlots(converted_data.interviewers);
+        expect(Object.entries(candidates_slots).length).toBe(50);
+        expect(Object.entries(interviewers_slots).length).toBe(20);
+
+        for (let i = 0; i < 5; ++i) {
+            const visited_slots = new Set();
+            const visited_candidates = new Set();
+            const output = match(converted_data.candidates, converted_data.interviewers, {
+                interviewers_per_slot: 2,
+                max_interviews_per_interviewer: 1e5,
+            });
+            expect(output.matches.length).toBe(50);
+            expect(Object.values(output.interviews_per_interviewer).length).toBe(20);
+            output.matches.forEach((match) => {
+                expect(match.interviewers.length).toBe(2);
+                expect(visited_slots.has(match.slot)).toBe(false);
+                expect(visited_candidates.has(match.candidate)).toBe(false);
+                visited_slots.add(match.slot);
+                visited_candidates.add(match.candidate);
+
+                expect(candidates_slots[match.candidate].has(match.slot));
+                expect(new Set([...match.interviewers]).size).toBe(match.interviewers.length);
+                match.interviewers.forEach((interviewer) => {
+                    --output.interviews_per_interviewer[interviewer];
+                    expect(interviewers_slots[interviewer].has(match.slot));
                 });
             });
 
@@ -435,10 +525,7 @@ describe("Build all matches from given flow results", () => {
 });
 
 describe("Verify if interviewer can attend slot", () => {
-    const interviewers_slots = {};
-    interviewers.forEach((interviewer) => {
-        interviewers_slots[interviewer.id] = interviewer.slots;
-    });
+    const interviewers_slots = mapIdToSlots(interviewers);
 
     it("should return true if interviewer can attend slot", () => {
         ["slot 3", "slot 4"].forEach((slot) => {
@@ -496,8 +583,8 @@ describe("Convert participants list to map from participant id to participant sl
 
             participants.forEach((participant) => {
                 expect(participants_slots[participant.id]).toBeDefined();
-                expect(Array.isArray(participants_slots[participant.id])).toBe(true);
-                expect(participants_slots[participant.id].toString()).toBe(participant.slots.toString());
+                expect(participants_slots[participant.id] instanceof Set).toBe(true);
+                expect([...participants_slots[participant.id]].toString()).toBe(participant.slots.toString());
             });
         });
     });
@@ -518,5 +605,332 @@ describe("Convert participants list to map from slot to its participants", () =>
                 });
             });
         });
+    });
+});
+
+describe("Convert participants list to map from slot to its participants", () => {
+    it("should map slots to participants", () => {
+        const participants_groups = [candidates, interviewers];
+
+        participants_groups.forEach((participants) => {
+            const slots_participants = mapSlotsToIds(participants);
+
+            participants.forEach((participant) => {
+                participant.slots.forEach((slot) => {
+                    expect(slots_participants[slot]).toBeDefined();
+                    expect(slots_participants[slot] instanceof Set).toBe(true);
+                    expect(slots_participants[slot].has(participant.id)).toBe(true);
+                });
+            });
+        });
+    });
+});
+
+describe("Iteratively improve given solution", () => {
+    it("should not update a unique solution", () => {
+        const matches = [
+            {
+                interviewers: ["I1"],
+                slot: "S1",
+                candidate: "C1",
+            },
+            {
+                interviewers: ["I3"],
+                slot: "S3",
+                candidate: "C2",
+            },
+        ];
+        const interviews_per_interviewer = {
+            "I1": 1,
+            "I2": 0,
+            "I3": 1,
+        };
+
+        improveMatching(matches, interviews_per_interviewer, interviewers4, candidates4);
+
+        expect(matches.length).toBe(2);
+        expect(Object.entries(interviews_per_interviewer).length).toBe(3);
+        matches.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+        });
+        expect(matches[0].interviewers[0]).toBe("I1");
+        expect(matches[1].interviewers[0]).toBe("I3");
+        expect(matches[0].slot).toBe("S1");
+        expect(matches[1].slot).toBe("S3");
+        expect(matches[0].candidate).toBe("C1");
+        expect(matches[1].candidate).toBe("C2");
+        expect(interviews_per_interviewer["I1"]).toBe(1);
+        expect(interviews_per_interviewer["I2"]).toBe(0);
+        expect(interviews_per_interviewer["I3"]).toBe(1);
+    });
+
+    it("should update a solution when there is room for improvement", () => {
+        const matches = [
+            {
+                interviewers: ["I1"],
+                slot: "S1",
+                candidate: "C1",
+            },
+            {
+                interviewers: ["I1"],
+                slot: "S2",
+                candidate: "C2",
+            },
+            {
+                interviewers: ["I1"],
+                slot: "S3",
+                candidate: "C3",
+            },
+        ];
+        const interviews_per_interviewer = {
+            "I1": 3,
+            "I2": 0,
+            "I3": 0,
+        };
+
+        improveMatching(matches, interviews_per_interviewer, interviewers5, candidates5);
+
+        expect(matches.length).toBe(3);
+        expect(Object.entries(interviews_per_interviewer).length).toBe(3);
+        matches.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+        });
+        expect(interviews_per_interviewer["I1"]).toBe(1);
+        expect(interviews_per_interviewer["I2"]).toBe(1);
+        expect(interviews_per_interviewer["I3"]).toBe(1);
+    });
+
+    it("should update a solution when there is room for improvement", () => {
+        const matches = [
+            {
+                interviewers: ["I1", "I2"],
+                slot: "S1",
+                candidate: "C1",
+            },
+            {
+                interviewers: ["I1", "I2"],
+                slot: "S2",
+                candidate: "C2",
+            },
+            {
+                interviewers: ["I1", "I2"],
+                slot: "S3",
+                candidate: "C3",
+            },
+        ];
+        const interviews_per_interviewer = {
+            "I1": 3,
+            "I2": 3,
+            "I3": 0,
+            "I4": 0,
+            "I5": 0,
+            "I6": 0,
+        };
+
+        improveMatching(matches, interviews_per_interviewer, interviewers6, candidates6);
+
+        expect(matches.length).toBe(3);
+        expect(Object.entries(interviews_per_interviewer).length).toBe(6);
+        matches.forEach((match) => {
+            expect(match.interviewers.length).toBe(2);
+        });
+        Object.values(interviews_per_interviewer).forEach((num_interviews) => {
+            expect(num_interviews).toBe(1);
+        });
+
+        const found_interviewers = new Set();
+        matches.forEach((match) => {
+            match.interviewers.forEach((interviewer) => {
+                expect(found_interviewers.has(interviewer)).toBe(false);
+                found_interviewers.add(interviewer);
+            });
+        });
+    });
+});
+
+describe("Swap slots between interviewers to improve current solution", () => {
+    it("should not swap when there is no improvement obtained by swapping", () => {
+        const matches = [
+            {
+                interviewers: ["I1"],
+                slot: "S1",
+                candidate: "C1",
+            },
+            {
+                interviewers: ["I3"],
+                slot: "S3",
+                candidate: "C2",
+            },
+        ];
+        const interviews_per_interviewer = {
+            "I1": 1,
+            "I2": 0,
+            "I3": 1,
+        };
+        const interviewers_slots = mapIdToSlots(interviewers4);
+
+        matches.forEach((match) => {
+            interviewers4.forEach((interviewerA) => {
+                interviewers4.forEach((interviewerB) => {
+                    expect(
+                        trySlotSwapBetweenInterviewers(interviewerA, interviewerB, match, interviews_per_interviewer, interviewers_slots),
+                    ).toBe(false);
+                });
+            });
+        });
+        expect(matches.length).toBe(2);
+        expect(Object.entries(interviews_per_interviewer).length).toBe(3);
+        matches.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+        });
+        expect(matches[0].interviewers[0]).toBe("I1");
+        expect(matches[1].interviewers[0]).toBe("I3");
+        expect(matches[0].slot).toBe("S1");
+        expect(matches[1].slot).toBe("S3");
+        expect(matches[0].candidate).toBe("C1");
+        expect(matches[1].candidate).toBe("C2");
+        expect(interviews_per_interviewer["I1"]).toBe(1);
+        expect(interviews_per_interviewer["I2"]).toBe(0);
+        expect(interviews_per_interviewer["I3"]).toBe(1);
+    });
+
+    it("should swap when there is improvement obtained by swapping", () => {
+        const matches = [
+            {
+                interviewers: ["I1"],
+                slot: "S1",
+                candidate: "C1",
+            },
+            {
+                interviewers: ["I1"],
+                slot: "S2",
+                candidate: "C2",
+            },
+            {
+                interviewers: ["I1"],
+                slot: "S3",
+                candidate: "C3",
+            },
+        ];
+        const interviews_per_interviewer = {
+            "I1": 3,
+            "I2": 0,
+            "I3": 0,
+        };
+        const interviewers_slots = mapIdToSlots(interviewers5);
+        expect(
+            trySlotSwapBetweenInterviewers("I3", "I1", matches[2], interviews_per_interviewer, interviewers_slots),
+        ).toBe(true);
+
+        expect(matches.length).toBe(3);
+        expect(Object.entries(interviews_per_interviewer).length).toBe(3);
+        matches.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+        });
+
+        expect(matches[0].interviewers[0]).toBe("I1");
+        expect(matches[2].interviewers[0]).toBe("I3");
+        expect(matches[0].slot).toBe("S1");
+        expect(matches[2].slot).toBe("S3");
+        expect(matches[0].candidate).toBe("C1");
+        expect(matches[2].candidate).toBe("C3");
+        expect(interviews_per_interviewer["I1"]).toBe(2);
+        expect(interviews_per_interviewer["I2"]).toBe(0);
+        expect(interviews_per_interviewer["I3"]).toBe(1);
+    });
+});
+
+describe("Swap slots between interviewers to improve current solution", () => {
+    it("should not swap when there is no improvement obtained by swapping", () => {
+        const matches = [
+            {
+                interviewers: ["I1"],
+                slot: "S1",
+                candidate: "C1",
+            },
+            {
+                interviewers: ["I3"],
+                slot: "S3",
+                candidate: "C2",
+            },
+        ];
+        const interviews_per_interviewer = {
+            "I1": 1,
+            "I2": 0,
+            "I3": 1,
+        };
+        const taken_slots = new Set(matches.map((match) => match.slot));
+        const candidates_slots = mapIdToSlots(candidates4);
+        const interviewers_slots = mapIdToSlots(interviewers4);
+        const slots_interviewers = mapSlotsToIds(interviewers4);
+
+        matches.forEach((match) => {
+            interviewers4.forEach((interviewer) => {
+                expect(
+                    tryCandidateSlotSwap(
+                        interviewer.id, match, interviews_per_interviewer, taken_slots, candidates_slots, interviewers_slots, slots_interviewers,
+                    ),
+                ).toBe(false);
+            });
+        });
+        expect(matches.length).toBe(2);
+        expect(Object.entries(interviews_per_interviewer).length).toBe(3);
+        matches.forEach((match) => {
+            expect(match.interviewers.length).toBe(1);
+        });
+        expect(matches[0].interviewers[0]).toBe("I1");
+        expect(matches[1].interviewers[0]).toBe("I3");
+        expect(matches[0].slot).toBe("S1");
+        expect(matches[1].slot).toBe("S3");
+        expect(matches[0].candidate).toBe("C1");
+        expect(matches[1].candidate).toBe("C2");
+        expect(interviews_per_interviewer["I1"]).toBe(1);
+        expect(interviews_per_interviewer["I2"]).toBe(0);
+        expect(interviews_per_interviewer["I3"]).toBe(1);
+    });
+
+    it("should swap when there is improvement obtained by swapping", () => {
+        for (let i = 0; i < 10; ++i) {
+            const matches = [
+                {
+                    interviewers: ["I1"],
+                    slot: "S1",
+                    candidate: "C1",
+                },
+                {
+                    interviewers: ["I1"],
+                    slot: "S2",
+                    candidate: "C2",
+                },
+            ];
+            const interviews_per_interviewer = {
+                "I1": 2,
+                "I2": 0,
+            };
+            const taken_slots = new Set(matches.map((match) => match.slot));
+            const candidates_slots = mapIdToSlots(candidates7);
+            const interviewers_slots = mapIdToSlots(interviewers7);
+            const slots_interviewers = mapSlotsToIds(interviewers7);
+
+            expect(
+                tryCandidateSlotSwap(
+                    "I2", matches[1], interviews_per_interviewer, taken_slots, candidates_slots, interviewers_slots, slots_interviewers,
+                ),
+            ).toBe(true);
+
+            expect(matches.length).toBe(2);
+            expect(Object.entries(interviews_per_interviewer).length).toBe(2);
+            matches.forEach((match) => {
+                expect(match.interviewers.length).toBe(1);
+            });
+            expect(matches[0].interviewers[0]).toBe("I1");
+            expect(matches[1].interviewers[0]).toBe("I2");
+            expect(matches[0].slot).toBe("S1");
+            expect(matches[1].slot).toBe("S3");
+            expect(matches[0].candidate).toBe("C1");
+            expect(matches[1].candidate).toBe("C2");
+            expect(interviews_per_interviewer["I1"]).toBe(1);
+            expect(interviews_per_interviewer["I2"]).toBe(1);
+        }
     });
 });

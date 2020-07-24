@@ -261,7 +261,7 @@ const trySlotSwapBetweenInterviewers = (interviewerA, interviewerB, match, inter
     return false;
 };
 
-const canInterviewerAttendSlot = (interviewer_id, slot, interviewers_slots) => interviewers_slots[interviewer_id].includes(slot);
+const canInterviewerAttendSlot = (interviewer_id, slot, interviewers_slots) => interviewers_slots[interviewer_id].has(slot);
 
 const tryCandidateSlotSwap = (interviewer, match, interviews_per_interviewer, taken_slots, candidates_slots, interviewers_slots, slots_interviewers) => {
     const curr_interviewers_work = countInterviewersTotalWork(match.interviewers, interviews_per_interviewer);
@@ -270,7 +270,7 @@ const tryCandidateSlotSwap = (interviewer, match, interviews_per_interviewer, ta
     for (const slot of candidates_slots[match.candidate]) {
         if (!taken_slots.has(slot)
             && canInterviewerAttendSlot(interviewer, slot, interviewers_slots)
-            && slots_interviewers[slot].size > interviewers_per_slot
+            && slots_interviewers[slot].size >= interviewers_per_slot
         ) {
             const valid_interviewers = new Set([...slots_interviewers[slot]]);
             valid_interviewers.delete(interviewer);
@@ -306,7 +306,7 @@ const countInterviewersTotalWork = (interviewers, interviews_per_interviewer) =>
 const mapIdToSlots = (participants) => {
     const participants_slots = {};
     participants.forEach((participant) => {
-        participants_slots[participant.id] = participant.slots;
+        participants_slots[participant.id] = new Set(participant.slots);
     });
     return participants_slots;
 };
@@ -335,4 +335,7 @@ module.exports = {
     countInterviewersTotalWork,
     mapIdToSlots,
     mapSlotsToIds,
+    improveMatching,
+    trySlotSwapBetweenInterviewers,
+    tryCandidateSlotSwap,
 };
