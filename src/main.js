@@ -1,4 +1,4 @@
-const { printUsage, printError } = require("./printer");
+const { printUsage } = require("./printer");
 const { readInputFile, validateFileData, writeJSONtoFile } = require("./fileUtils");
 const { match } = require("./matcher");
 const { fetchDoodleData } = require("./apiFetcher");
@@ -76,12 +76,6 @@ const main = async () => {
     );
 };
 
-try {
-    main().catch((e) => {
-        printError(e.err, e.msg);
-        process.exit(e.err.code);
-    });
-} catch (e) {
-    printError(e.err, e.msg);
-    process.exit(e.err.code);
-}
+module.exports = {
+    main,
+};

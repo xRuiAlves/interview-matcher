@@ -2,8 +2,11 @@
   "name": "interview-matcher",
   "version": "1.0.0",
   "description": "Interview slots matcher for candidates and interviewers",
-  "repository": "github:xRuiAlves/interview-matcher", 
-  "main": "main.js",
+  "repository": "github:xRuiAlves/interview-matcher",
+  "main": "./src/main.js",
+  "bin": {
+    "interview-matcher": "./bin/index.js"
+  },
   "scripts": {
     "start": "node src/main.js",
     "test": "jest --coverage",
@@ -30,5 +33,10 @@
     "coveralls": "^3.1.0",
     "eslint": "^7.5.0",
     "jest": "^26.1.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      ".stryker-tmp"
+    ]
   }
 }
