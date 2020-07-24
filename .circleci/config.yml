@@ -37,6 +37,11 @@ jobs:
       - run:
           name: Unit tests
           command: npm run test:publish
+  test:mutation:
+    docker: *docker
+    steps:
+      - attach_workspace:
+          at: .
       - run:
           name: Mutation tests
           command: npm run test:mutation:publish
@@ -58,6 +63,9 @@ workflows:
           requires:
             - build
       - test:
+          requires:
+            - build
+      - test:mutation:
           requires:
             - build
       - audit:
