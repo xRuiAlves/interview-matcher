@@ -164,8 +164,5 @@ temp/
 
 # End of https://www.gitignore.io/api/osx,node,linux,macos
 
-# Stryker files
-.stryker-tmp
-
 # Reports
 reports/
