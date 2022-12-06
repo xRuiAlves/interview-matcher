@@ -207,12 +207,6 @@ $ npm install
 $ npm test
 ```
 
-To run mutation tests:
-
-```
-$ npm run test:mutation
-```
-
 ## License
 
 [MIT](https://github.com/xRuiAlves/interview-matcher/blob/master/LICENSE)
