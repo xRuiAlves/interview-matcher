@@ -4,7 +4,6 @@
 [![npm version](https://img.shields.io/npm/v/interview-matcher.svg?style=flat-square)](https://www.npmjs.com/package/interview-matcher)
 [![Build Status](https://circleci.com/gh/xRuiAlves/interview-matcher.svg?style=shield)](https://circleci.com/gh/xRuiAlves/interview-matcher)
 [![Coverage Status](https://coveralls.io/repos/github/xRuiAlves/interview-matcher/badge.svg?branch=master)](https://coveralls.io/github/xRuiAlves/interview-matcher?branch=master)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FxRuiAlves%2Finterview-matcher%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/xRuiAlves/interview-matcher/master)
 
 Interview slots matcher for candidates and interviewers, built using NodeJS.
 
